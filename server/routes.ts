@@ -173,6 +173,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         session: {
           id: session.id,
           accessTime: session.accessTime,
+          discordUsername: inviteCode.discordUsername,
         }
       });
     } catch (error) {
@@ -184,6 +185,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       console.error("Error validating invite:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Internal server error" 
+      });
+    }
+  });
+
+  // Get session data with Discord usernames
+  app.get("/api/sessions", async (req, res) => {
+    try {
+      const result = await storage.getSessionsWithDiscordData();
+      res.json({ sessions: result });
+    } catch (error) {
+      console.error("Error fetching sessions:", error);
       res.status(500).json({ 
         success: false, 
         message: "Internal server error" 

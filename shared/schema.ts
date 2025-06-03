@@ -8,6 +8,8 @@ export const inviteCodes = pgTable("invite_codes", {
   isUsed: text("is_used").notNull().default("false"),
   usedAt: timestamp("used_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  discordUserId: text("discord_user_id"),
+  discordUsername: text("discord_username"),
 });
 
 export const sessions = pgTable("sessions", {

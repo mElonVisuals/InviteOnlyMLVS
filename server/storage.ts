@@ -7,6 +7,7 @@ export interface IStorage {
   markInviteCodeAsUsed(id: number): Promise<void>;
   createSession(session: InsertSession): Promise<Session>;
   initializeInviteCodes(): Promise<void>;
+  getSessionsWithDiscordData(): Promise<any[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -49,6 +50,24 @@ export class DatabaseStorage implements IStorage {
         await db.insert(inviteCodes).values({ code });
       }
     }
+  }
+
+  async getSessionsWithDiscordData(): Promise<any[]> {
+    const result = await db
+      .select({
+        sessionId: sessions.id,
+        accessTime: sessions.accessTime,
+        userAgent: sessions.userAgent,
+        inviteCode: inviteCodes.code,
+        discordUsername: inviteCodes.discordUsername,
+        discordUserId: inviteCodes.discordUserId,
+        usedAt: inviteCodes.usedAt,
+      })
+      .from(sessions)
+      .innerJoin(inviteCodes, eq(sessions.inviteCodeId, inviteCodes.id))
+      .orderBy(sessions.accessTime);
+    
+    return result;
   }
 }
 

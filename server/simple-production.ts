@@ -77,10 +77,10 @@ async function startDiscordBot() {
           // Generate invite code
           const code = generateInviteCode();
           
-          // Save to database
+          // Save to database with Discord user info
           await pool.query(
-            'INSERT INTO invite_codes (code, is_used) VALUES ($1, $2)',
-            [code, 'false']
+            'INSERT INTO invite_codes (code, is_used, discord_user_id, discord_username) VALUES ($1, $2, $3, $4)',
+            [code, 'false', interaction.user.id, interaction.user.username]
           );
 
           await pool.query(
@@ -155,7 +155,9 @@ async function initializeDatabase() {
         code TEXT UNIQUE NOT NULL,
         is_used TEXT NOT NULL DEFAULT 'false',
         used_at TIMESTAMP,
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        discord_user_id TEXT,
+        discord_username TEXT
       );
     `);
 
