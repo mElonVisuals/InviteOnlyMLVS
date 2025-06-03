@@ -180,7 +180,7 @@ export default function InvitePage() {
 
           {/* Header Section */}
           <div className="text-center mb-12 relative">
-            <p className="text-slate-300 text-xl animate-slide-up relative z-10 font-light" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
+            <p className="text-white text-3xl animate-slide-up relative z-10 font-bold" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
           </div>
 
           {/* Invite Form */}
@@ -282,33 +282,7 @@ export default function InvitePage() {
         </div>
       </div>
 
-      {/* Music Controls */}
-      <div className="fixed top-4 right-4 z-50 flex space-x-2">
-        <Button
-          onClick={toggleMusic}
-          className="p-3 bg-black/40 hover:bg-black/60 backdrop-blur-sm border border-white/20 rounded-full transition-all duration-300"
-          variant="ghost"
-          size="sm"
-        >
-          {isPlaying ? (
-            <PauseIcon className="w-4 h-4 text-white" />
-          ) : (
-            <PlayIcon className="w-4 h-4 text-white" />
-          )}
-        </Button>
-        <Button
-          onClick={toggleMute}
-          className="p-3 bg-black/40 hover:bg-black/60 backdrop-blur-sm border border-white/20 rounded-full transition-all duration-300"
-          variant="ghost"
-          size="sm"
-        >
-          {isMuted ? (
-            <VolumeXIcon className="w-4 h-4 text-white" />
-          ) : (
-            <Volume2Icon className="w-4 h-4 text-white" />
-          )}
-        </Button>
-      </div>
+
 
       {/* Background Audio - Using Web Audio API for ambient sound */}
       <audio 
