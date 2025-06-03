@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Build the production server without vite dependencies
-RUN npx esbuild server/simple-production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/server.js
+RUN npx esbuild server/production-fixed.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/server.js
 
 # Run database migrations (only works if DATABASE_URL is provided at build time)
 RUN npm run db:push || echo "Database migration skipped - DATABASE_URL not available at build time"

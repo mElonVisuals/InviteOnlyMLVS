@@ -31,13 +31,29 @@ async function startDiscordBot() {
       ALTER TABLE invite_codes ADD COLUMN IF NOT EXISTS discord_username TEXT;
     `);
     
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS discord_requests (
-        id SERIAL PRIMARY KEY,
-        discord_user_id TEXT UNIQUE NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+    // Handle discord_requests table schema migration
+    try {
+      // Check if table exists with wrong schema and fix it
+      const tableExists = await pool.query(`
+        SELECT column_name FROM information_schema.columns 
+        WHERE table_name = 'discord_requests' AND column_name = 'invite_code'
+      `);
+      
+      if (tableExists.rows.length > 0) {
+        // Table has old schema, recreate it
+        await pool.query(`DROP TABLE discord_requests`);
+      }
+      
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS discord_requests (
+          id SERIAL PRIMARY KEY,
+          discord_user_id TEXT UNIQUE NOT NULL,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+    } catch (error) {
+      log(`Discord bot: Database migration error: ${error}`);
+    }
 
     // Import Discord.js dynamically
     const { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = await import('discord.js');
