@@ -91,18 +91,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async addReport(userId: string, username: string, content: string, type: string): Promise<void> {
-    await db.execute(`
+    const result = await db.execute(`
       INSERT INTO reports (discord_user_id, discord_username, content, report_type, status, created_at)
-      VALUES ($1, $2, $3, $4, 'pending', NOW())
-    `, [userId, username, content, type]);
+      VALUES ('${userId}', '${username}', '${content}', '${type}', 'pending', NOW())
+    `);
   }
 
   async updateUserProfile(sessionId: number, email: string, discordConnected: boolean): Promise<void> {
-    await db.execute(`
+    const result = await db.execute(`
       UPDATE sessions 
-      SET email = $1, discord_connected = $2 
-      WHERE id = $3
-    `, [email, discordConnected, sessionId]);
+      SET email = '${email}', discord_connected = ${discordConnected}
+      WHERE id = ${sessionId}
+    `);
   }
 }
 

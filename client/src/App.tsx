@@ -7,12 +7,12 @@ import InvitePage from "@/pages/invite";
 import WelcomePage from "@/pages/welcome";
 import PrivacyPage from "@/pages/privacy";
 import TermsPage from "@/pages/terms";
-import DashboardPage from "@/pages/dashboard";
+import DashboardPage from "@/pages/dashboard-enhanced";
 import AnalyticsPage from "@/pages/analytics";
 import UsersPage from "@/pages/users";
-import SystemPage from "@/pages/system";
-import ReportsPage from "@/pages/reports";
-import SettingsPage from "@/pages/settings";
+import SystemPage from "@/pages/system-enhanced";
+import ReportsPage from "@/pages/reports-enhanced";
+import SettingsPage from "@/pages/settings-enhanced";
 import { useEffect } from "react";
 
 function Router() {
