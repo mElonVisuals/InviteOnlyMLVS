@@ -180,12 +180,6 @@ export default function InvitePage() {
 
           {/* Header Section */}
           <div className="text-center mb-12 relative">
-            <div className="flex items-center justify-center space-x-3 mb-6 animate-slide-up relative z-10" style={{animationDelay: '0.2s'}}>
-              <div className="p-2 bg-blue-500/20 rounded-lg backdrop-blur-sm border border-blue-400/30">
-                <ShieldCheckIcon className="text-blue-400 w-6 h-6 animate-pulse" />
-              </div>
-              <span className="text-blue-400 font-semibold text-xl tracking-wide">Secure Access Portal</span>
-            </div>
             <p className="text-slate-300 text-xl animate-slide-up relative z-10 font-light" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
           </div>
 
