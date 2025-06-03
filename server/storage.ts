@@ -1,4 +1,6 @@
 import { inviteCodes, sessions, type InviteCode, type InsertInviteCode, type InsertSession, type Session } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   getInviteCodeByCode(code: string): Promise<InviteCode | undefined>;
@@ -7,18 +9,28 @@ export interface IStorage {
   initializeInviteCodes(): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private inviteCodes: Map<number, InviteCode>;
-  private sessions: Map<number, Session>;
-  private currentInviteId: number;
-  private currentSessionId: number;
+export class DatabaseStorage implements IStorage {
+  async getInviteCodeByCode(code: string): Promise<InviteCode | undefined> {
+    const [inviteCode] = await db.select().from(inviteCodes).where(eq(inviteCodes.code, code.toUpperCase()));
+    return inviteCode || undefined;
+  }
 
-  constructor() {
-    this.inviteCodes = new Map();
-    this.sessions = new Map();
-    this.currentInviteId = 1;
-    this.currentSessionId = 1;
-    this.initializeInviteCodes();
+  async markInviteCodeAsUsed(id: number): Promise<void> {
+    await db
+      .update(inviteCodes)
+      .set({ 
+        isUsed: "true", 
+        usedAt: new Date() 
+      })
+      .where(eq(inviteCodes.id, id));
+  }
+
+  async createSession(insertSession: InsertSession): Promise<Session> {
+    const [session] = await db
+      .insert(sessions)
+      .values(insertSession)
+      .returning();
+    return session;
   }
 
   async initializeInviteCodes(): Promise<void> {
@@ -31,43 +43,13 @@ export class MemStorage implements IStorage {
     ];
 
     for (const code of defaultCodes) {
-      const inviteCode: InviteCode = {
-        id: this.currentInviteId++,
-        code,
-        isUsed: "false",
-        usedAt: null,
-        createdAt: new Date(),
-      };
-      this.inviteCodes.set(inviteCode.id, inviteCode);
+      // Check if code already exists
+      const existing = await this.getInviteCodeByCode(code);
+      if (!existing) {
+        await db.insert(inviteCodes).values({ code });
+      }
     }
-  }
-
-  async getInviteCodeByCode(code: string): Promise<InviteCode | undefined> {
-    return Array.from(this.inviteCodes.values()).find(
-      (invite) => invite.code.toUpperCase() === code.toUpperCase()
-    );
-  }
-
-  async markInviteCodeAsUsed(id: number): Promise<void> {
-    const inviteCode = this.inviteCodes.get(id);
-    if (inviteCode) {
-      inviteCode.isUsed = "true";
-      inviteCode.usedAt = new Date();
-      this.inviteCodes.set(id, inviteCode);
-    }
-  }
-
-  async createSession(insertSession: InsertSession): Promise<Session> {
-    const id = this.currentSessionId++;
-    const session: Session = {
-      id,
-      inviteCodeId: insertSession.inviteCodeId || 0,
-      userAgent: insertSession.userAgent || null,
-      accessTime: new Date(),
-    };
-    this.sessions.set(id, session);
-    return session;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

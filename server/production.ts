@@ -1,5 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
+import { storage } from "./storage";
 import path from "path";
 import fs from "fs";
 
@@ -66,6 +67,10 @@ function serveStatic(app: express.Express) {
 }
 
 (async () => {
+  // Initialize database with default invite codes
+  await storage.initializeInviteCodes();
+  log("Database initialized with invite codes");
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
