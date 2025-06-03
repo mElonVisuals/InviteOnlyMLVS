@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { KeyIcon, TicketIcon, ArrowRightIcon, CheckCircleIcon, XCircleIcon, Loader2Icon, ShieldCheckIcon, Volume2Icon, VolumeXIcon, PlayIcon, PauseIcon } from "lucide-react";
+import { KeyIcon, TicketIcon, ArrowRightIcon, CheckCircleIcon, XCircleIcon, Loader2Icon, ShieldCheckIcon, Volume2Icon, VolumeXIcon, PlayIcon, PauseIcon, UserIcon } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -29,6 +29,10 @@ export default function InvitePage() {
   } | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [showDiscordLogin, setShowDiscordLogin] = useState(false);
+  const [discordUsername, setDiscordUsername] = useState("");
+  const [discordUserId, setDiscordUserId] = useState("");
+  const [isDiscordLoading, setIsDiscordLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const { toast } = useToast();
 
@@ -87,7 +91,7 @@ export default function InvitePage() {
         }
         
         setTimeout(() => {
-          setLocation('/welcome');
+          setLocation('/dashboard');
         }, 1500);
       } else {
         setStatusMessage({
@@ -104,6 +108,71 @@ export default function InvitePage() {
       });
     },
   });
+
+  const handleDiscordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!discordUsername.trim() || !discordUserId.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter both your Discord username and user ID.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsDiscordLoading(true);
+    try {
+      const response = await fetch('/api/discord-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          discordUserId: discordUserId.trim(),
+          discordUsername: discordUsername.trim()
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        const sessionData = {
+          sessionId: data.session.id,
+          accessTime: data.session.accessTime,
+          inviteCode: 'RETURNING_USER',
+          discordUsername: data.session.discordUsername,
+          discordUserId: discordUserId.trim(),
+          userAgent: navigator.userAgent,
+          usedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem('sessionData', JSON.stringify(sessionData));
+        
+        toast({
+          title: "Welcome Back!",
+          description: "Successfully logged in with Discord.",
+        });
+
+        setLocation('/dashboard');
+      } else {
+        toast({
+          title: "Login Failed",
+          description: data.message || "No previous access found. Please request a new invite code.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Discord login error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to authenticate with Discord. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDiscordLoading(false);
+    }
+  };
 
   const requestInviteMutation = useMutation({
     mutationFn: async () => {
@@ -320,8 +389,87 @@ export default function InvitePage() {
             </CardContent>
           </Card>
 
+          {/* Discord Login Toggle */}
+          <div className="text-center mt-6 animate-slide-up" style={{animationDelay: '1.2s'}}>
+            <Button
+              onClick={() => setShowDiscordLogin(!showDiscordLogin)}
+              variant="outline"
+              className="bg-indigo-600/20 border-indigo-400/30 text-indigo-300 hover:bg-indigo-600/30 px-6 py-3 rounded-xl"
+            >
+              <UserIcon className="w-4 h-4 mr-2" />
+              {showDiscordLogin ? 'Use Invite Code Instead' : 'Returning User? Sign In with Discord'}
+            </Button>
+          </div>
+
+          {/* Discord Login Form */}
+          {showDiscordLogin && (
+            <Card className="mt-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl animate-slide-up">
+              <CardContent className="p-8">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold text-white mb-2">Discord Authentication</h3>
+                  <p className="text-white/60 text-sm">
+                    Sign in with your Discord credentials if you've previously accessed the system
+                  </p>
+                </div>
+
+                <form onSubmit={handleDiscordLogin} className="space-y-4">
+                  <div>
+                    <Label htmlFor="discord-username" className="block text-base font-medium text-white/90 mb-2">
+                      Discord Username
+                    </Label>
+                    <Input
+                      type="text"
+                      id="discord-username"
+                      value={discordUsername}
+                      onChange={(e) => setDiscordUsername(e.target.value)}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40"
+                      placeholder="Enter your Discord username"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="discord-userid" className="block text-base font-medium text-white/90 mb-2">
+                      Discord User ID
+                    </Label>
+                    <Input
+                      type="text"
+                      id="discord-userid"
+                      value={discordUserId}
+                      onChange={(e) => setDiscordUserId(e.target.value)}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40"
+                      placeholder="Enter your Discord user ID"
+                      required
+                    />
+                    <p className="text-white/50 text-xs mt-1">
+                      Right-click your profile in Discord and select "Copy User ID"
+                    </p>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isDiscordLoading}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300"
+                  >
+                    {isDiscordLoading ? (
+                      <>
+                        <Loader2Icon className="w-5 h-5 animate-spin mr-2" />
+                        Authenticating...
+                      </>
+                    ) : (
+                      <>
+                        <UserIcon className="w-5 h-5 mr-2" />
+                        Sign In with Discord
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Info Section */}
-          <div className="text-center mt-8 animate-slide-up" style={{animationDelay: '1.2s'}}>
+          <div className="text-center mt-8 animate-slide-up" style={{animationDelay: '1.4s'}}>
             <p className="text-sm text-white/60 mb-4">
               Don't have an invite code?
             </p>
