@@ -173,6 +173,7 @@ export default function InvitePage() {
 
           {/* Header Section */}
           <div className="text-center mb-12 relative">
+            <h1 className="text-white text-5xl animate-slide-up relative z-10 font-bold mb-6" style={{animationDelay: '0.2s'}}>MLVS District</h1>
             <p className="text-white text-3xl animate-slide-up relative z-10 font-bold" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
           </div>
 
