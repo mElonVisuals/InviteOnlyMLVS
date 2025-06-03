@@ -17,8 +17,16 @@ export class DiscordBotService {
     }
 
     try {
-      // Dynamic import to avoid issues if discord.js is not available
-      const { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = await import('discord.js');
+      // Try dynamic import first, then fall back to require for production
+      let Discord;
+      try {
+        Discord = await import('discord.js');
+      } catch (importError) {
+        console.log('ESM import failed, trying CommonJS require...');
+        Discord = require('discord.js');
+      }
+      
+      const { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = Discord;
 
       console.log('Starting Discord bot service...');
 

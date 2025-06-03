@@ -1,23 +1,12 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
+import { serveStatic, log } from "./vite";
 import { pool } from "./db";
-import path from "path";
-import fs from "fs";
+import { discordBot } from "./discord-service";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-function log(message: string, source = "express") {
-  const formattedTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
-
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -49,21 +38,13 @@ app.use((req, res, next) => {
   next();
 });
 
-function serveStatic(app: express.Express) {
-  const distPath = path.resolve(import.meta.dirname, "..", "public");
-
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
-    );
-  }
-
-  app.use(express.static(distPath));
-
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
-  });
+function logEnvironmentCheck() {
+  log("Environment Check:");
+  log(`- NODE_ENV: ${process.env.NODE_ENV}`);
+  log(`- PORT: ${process.env.PORT || '5000'}`);
+  log(`- DATABASE_URL: ${process.env.DATABASE_URL ? 'Present' : 'Missing'}`);
+  log(`- DISCORD_BOT_TOKEN: ${process.env.DISCORD_BOT_TOKEN ? 'Present' : 'Missing'}`);
+  log(`- DISCORD_GUILD_ID: ${process.env.DISCORD_GUILD_ID ? 'Present' : 'Missing'}`);
 }
 
 async function initializeDatabase() {
@@ -89,6 +70,15 @@ async function initializeDatabase() {
       );
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS discord_requests (
+        id SERIAL PRIMARY KEY,
+        discord_user_id TEXT UNIQUE NOT NULL,
+        invite_code TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     const initialCodes = ['ALPHA-2024', 'BETA-ACCESS', 'EARLY-BIRD', 'VIP-MEMBER', 'DEMO-CODE'];
     
     for (const code of initialCodes) {
@@ -108,7 +98,20 @@ async function initializeDatabase() {
 }
 
 (async () => {
+  logEnvironmentCheck();
+  
   await initializeDatabase();
+  
+  // Start Discord bot with detailed logging
+  log('Attempting to start Discord bot...');
+  try {
+    await discordBot.start();
+    log('Discord bot startup completed');
+  } catch (error: any) {
+    log(`Discord bot startup failed: ${error.message || error}`);
+    log(`Discord bot error stack: ${error.stack || 'No stack trace'}`);
+  }
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -119,15 +122,15 @@ async function initializeDatabase() {
     throw err;
   });
 
-  // Serve static files in production
   serveStatic(app);
 
-  const port = 5000;
+  const port = process.env.PORT || 5000;
   server.listen({
-    port,
+    port: Number(port),
     host: "0.0.0.0",
     reusePort: true,
   }, () => {
-    log(`serving on port ${port}`);
+    log(`Server serving on port ${port}`);
+    log(`Application startup complete`);
   });
 })();
