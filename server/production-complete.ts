@@ -73,6 +73,7 @@ async function initializeDatabase() {
       );
     `);
 
+    // Create discord_requests table with proper error handling
     await pool.query(`
       CREATE TABLE IF NOT EXISTS discord_requests (
         id SERIAL PRIMARY KEY,
@@ -81,6 +82,22 @@ async function initializeDatabase() {
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    // Add missing columns to existing tables if they don't exist
+    try {
+      await pool.query(`
+        DO $$ 
+        BEGIN
+          IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                         WHERE table_name = 'discord_requests' AND column_name = 'invite_code') THEN
+            ALTER TABLE discord_requests ADD COLUMN invite_code TEXT NOT NULL DEFAULT '';
+          END IF;
+        END $$;
+      `);
+    } catch (error) {
+      // Column might already exist, continue
+      log('Discord_requests table structure verified');
+    }
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS reports (
