@@ -99,6 +99,37 @@ export default function InvitePage() {
     },
   });
 
+  const requestInviteMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/request-invite", {});
+      return response.json() as Promise<{ success: boolean; invite?: string; message: string; }>;
+    },
+    onSuccess: (data) => {
+      if (data.success && data.invite) {
+        // Open Discord invite in new tab
+        window.open(data.invite, '_blank');
+        toast({
+          title: "Success",
+          description: data.message,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: data.message,
+          variant: "destructive",
+        });
+      }
+    },
+    onError: (error) => {
+      console.error('Request invite error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate Discord invite. Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/[^A-Z0-9]/g, '').toUpperCase();
     
@@ -285,12 +316,26 @@ export default function InvitePage() {
 
           {/* Info Section */}
           <div className="text-center mt-8 animate-slide-up" style={{animationDelay: '1.2s'}}>
-            <p className="text-sm text-white/60">
-              Don't have an invite code?{' '}
-              <a href="#" className="text-blue-400 hover:text-blue-300 font-medium transition-all duration-300 hover:underline">
-                Request access
-              </a>
+            <p className="text-sm text-white/60 mb-4">
+              Don't have an invite code?
             </p>
+            <Button
+              onClick={() => requestInviteMutation.mutate()}
+              disabled={requestInviteMutation.isPending}
+              className="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white font-medium py-3 px-8 rounded-xl transition-all duration-500 flex items-center justify-center space-x-2 shadow-lg hover:shadow-purple-500/30 transform hover:scale-105 border border-purple-500/30"
+            >
+              {requestInviteMutation.isPending ? (
+                <>
+                  <Loader2Icon className="w-4 h-4 animate-spin" />
+                  <span>Generating Discord Invite...</span>
+                </>
+              ) : (
+                <>
+                  <ShieldCheckIcon className="w-4 h-4" />
+                  <span>Request Access via Discord</span>
+                </>
+              )}
+            </Button>
           </div>
 
         </div>
