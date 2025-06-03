@@ -173,28 +173,25 @@ export default function InvitePage() {
 
           {/* Header Section */}
           <div className="text-center mb-12 relative">
-            {/* Fancy Logo with Effects */}
-            <div className="relative mb-8 animate-slide-up" style={{animationDelay: '0.2s'}}>
-              {/* Background glow effect */}
-              <div className="absolute inset-0 blur-3xl opacity-40">
-                <h1 className="text-6xl font-black bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
+            {/* Fancy Logo with Modern Effects */}
+            <div className="relative mb-8 animate-slide-up animate-float" style={{animationDelay: '0.2s'}}>
+              {/* Background shimmer effect */}
+              <div className="absolute inset-0 blur-2xl opacity-30">
+                <h1 className="text-6xl font-alfa-slab bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
                   MLVS District
                 </h1>
               </div>
               
-              {/* Main logo with gradient and shadow */}
-              <h1 className="relative text-6xl font-black bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent drop-shadow-2xl animate-pulse">
+              {/* Main logo with shimmer and glow */}
+              <h1 className="relative text-6xl font-alfa-slab bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent animate-glow animate-shimmer bg-size-200 bg-gradient-to-r">
                 MLVS District
               </h1>
               
-              {/* Animated underline */}
-              <div className="mt-3 h-1 w-48 mx-auto bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-full animate-pulse opacity-80"></div>
-              
-              {/* Floating particles around logo */}
-              <div className="absolute -top-4 -left-4 w-2 h-2 bg-blue-400 rounded-full animate-ping opacity-75"></div>
-              <div className="absolute -top-2 -right-6 w-1 h-1 bg-purple-400 rounded-full animate-ping opacity-60" style={{animationDelay: '0.5s'}}></div>
-              <div className="absolute -bottom-2 -left-8 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-ping opacity-70" style={{animationDelay: '1s'}}></div>
-              <div className="absolute -bottom-4 -right-4 w-2 h-2 bg-indigo-400 rounded-full animate-ping opacity-65" style={{animationDelay: '1.5s'}}></div>
+              {/* Modern floating orbs */}
+              <div className="absolute -top-6 -left-6 w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-80 animate-ping"></div>
+              <div className="absolute -top-3 -right-8 w-2 h-2 bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full opacity-70 animate-ping" style={{animationDelay: '0.7s'}}></div>
+              <div className="absolute -bottom-4 -left-10 w-2.5 h-2.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full opacity-75 animate-ping" style={{animationDelay: '1.2s'}}></div>
+              <div className="absolute -bottom-6 -right-6 w-3 h-3 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full opacity-65 animate-ping" style={{animationDelay: '1.8s'}}></div>
             </div>
             
             <p className="text-white text-3xl animate-slide-up relative z-10 font-bold" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
