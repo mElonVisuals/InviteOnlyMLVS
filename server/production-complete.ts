@@ -95,18 +95,65 @@ async function initializeDatabase() {
 
     // Add missing columns to existing tables if they don't exist
     try {
+      // Add discord_user_id to sessions table
       await pool.query(`
         DO $$ 
         BEGIN
           IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
-                         WHERE table_name = 'discord_requests' AND column_name = 'invite_code') THEN
-            ALTER TABLE discord_requests ADD COLUMN invite_code TEXT NOT NULL DEFAULT '';
+                         WHERE table_name = 'sessions' AND column_name = 'discord_user_id') THEN
+            ALTER TABLE sessions ADD COLUMN discord_user_id TEXT;
           END IF;
         END $$;
       `);
+      
+      // Add discord_username to sessions table
+      await pool.query(`
+        DO $$ 
+        BEGIN
+          IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                         WHERE table_name = 'sessions' AND column_name = 'discord_username') THEN
+            ALTER TABLE sessions ADD COLUMN discord_username TEXT;
+          END IF;
+        END $$;
+      `);
+      
+      // Add user_agent to sessions table
+      await pool.query(`
+        DO $$ 
+        BEGIN
+          IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                         WHERE table_name = 'sessions' AND column_name = 'user_agent') THEN
+            ALTER TABLE sessions ADD COLUMN user_agent TEXT;
+          END IF;
+        END $$;
+      `);
+      
+      // Add used_at to sessions table
+      await pool.query(`
+        DO $$ 
+        BEGIN
+          IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                         WHERE table_name = 'sessions' AND column_name = 'used_at') THEN
+            ALTER TABLE sessions ADD COLUMN used_at TIMESTAMP;
+          END IF;
+        END $$;
+      `);
+      
+      // Add invite_code to sessions table
+      await pool.query(`
+        DO $$ 
+        BEGIN
+          IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                         WHERE table_name = 'sessions' AND column_name = 'invite_code') THEN
+            ALTER TABLE sessions ADD COLUMN invite_code TEXT;
+          END IF;
+        END $$;
+      `);
+      
+      log('Sessions table structure updated with Discord columns');
     } catch (error) {
-      // Column might already exist, continue
-      log('Discord_requests table structure verified');
+      log('Sessions table structure check failed');
+      console.error(error);
     }
 
     await pool.query(`

@@ -19,6 +19,8 @@ export const sessions = pgTable("sessions", {
   userAgent: text("user_agent"),
   discordUserId: text("discord_user_id"),
   discordUsername: text("discord_username"),
+  usedAt: timestamp("used_at"),
+  inviteCode: text("invite_code"),
 });
 
 export const insertInviteCodeSchema = createInsertSchema(inviteCodes).pick({
