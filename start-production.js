@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+import { spawn } from 'child_process';
 
 console.log('Starting MLVS District Application...');
 console.log('Environment:', process.env.NODE_ENV || 'production');
@@ -10,8 +10,8 @@ console.log('- DISCORD_BOT_TOKEN:', process.env.DISCORD_BOT_TOKEN ? 'Present' : 
 console.log('- DISCORD_GUILD_ID:', process.env.DISCORD_GUILD_ID ? 'Present' : 'Missing');
 console.log('- PORT:', process.env.PORT || '5000');
 
-// Start the main application
-const app = spawn('node', ['--loader', 'tsx/esm', 'server/production.ts'], {
+// Start the main application directly using tsx
+const app = spawn('npx', ['tsx', 'server/production.ts'], {
   stdio: 'inherit',
   env: process.env
 });

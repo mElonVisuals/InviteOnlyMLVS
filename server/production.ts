@@ -2,7 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic, log } from "./vite";
 import { pool } from "./db";
-import { discordBot } from "./discord-service";
+import { initializeDiscordBot } from "./discord-bot-simple";
 
 const app = express();
 app.use(express.json());
@@ -105,7 +105,7 @@ async function initializeDatabase() {
   // Start Discord bot with detailed logging
   log('Attempting to start Discord bot...');
   try {
-    await discordBot.start();
+    await initializeDiscordBot();
     log('Discord bot startup completed');
   } catch (error: any) {
     log(`Discord bot startup failed: ${error.message || error}`);

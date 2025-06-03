@@ -27,8 +27,8 @@ export async function initializeDiscordBot(): Promise<void> {
       );
     `);
 
-    // Import Discord.js using require for better compatibility
-    const Discord = require('discord.js');
+    // Import Discord.js using ES module syntax
+    const Discord = await import('discord.js');
     const { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = Discord;
 
     discordClient = new Client({
