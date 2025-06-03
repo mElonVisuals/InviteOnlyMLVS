@@ -83,6 +83,16 @@ async function initializeDatabase() {
       );
     `);
 
+    // Remove unique constraint if it exists (to allow multiple requests per user)
+    try {
+      await pool.query(`
+        ALTER TABLE discord_requests DROP CONSTRAINT IF EXISTS discord_requests_discord_user_id_key;
+      `);
+    } catch (error) {
+      // Constraint might not exist, continue
+      log('Discord_requests constraint cleanup complete');
+    }
+
     // Add missing columns to existing tables if they don't exist
     try {
       await pool.query(`
