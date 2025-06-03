@@ -175,23 +175,23 @@ export default function InvitePage() {
           <div className="text-center mb-12 relative">
             {/* Fancy Logo with Modern Effects */}
             <div className="relative mb-8 animate-slide-up animate-float" style={{animationDelay: '0.2s'}}>
-              {/* Background shimmer effect */}
-              <div className="absolute inset-0 blur-2xl opacity-30">
-                <h1 className="text-6xl font-alfa-slab bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
-                  MLVS District
+              {/* Background glow effect */}
+              <div className="absolute inset-0 blur-2xl opacity-40">
+                <h1 className="text-6xl font-alfa-slab text-white">
+                  MLVS DISTRICT
                 </h1>
               </div>
               
-              {/* Main logo with shimmer and glow */}
-              <h1 className="relative text-6xl font-alfa-slab bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent animate-glow animate-shimmer bg-size-200 bg-gradient-to-r">
-                MLVS District
+              {/* Main logo with white color and glow */}
+              <h1 className="relative text-6xl font-alfa-slab text-white animate-glow drop-shadow-2xl" style={{textShadow: '0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1)'}}>
+                MLVS DISTRICT
               </h1>
               
               {/* Modern floating orbs */}
-              <div className="absolute -top-6 -left-6 w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-80 animate-ping"></div>
-              <div className="absolute -top-3 -right-8 w-2 h-2 bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full opacity-70 animate-ping" style={{animationDelay: '0.7s'}}></div>
-              <div className="absolute -bottom-4 -left-10 w-2.5 h-2.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full opacity-75 animate-ping" style={{animationDelay: '1.2s'}}></div>
-              <div className="absolute -bottom-6 -right-6 w-3 h-3 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full opacity-65 animate-ping" style={{animationDelay: '1.8s'}}></div>
+              <div className="absolute -top-6 -left-6 w-3 h-3 bg-white rounded-full opacity-60 animate-ping"></div>
+              <div className="absolute -top-3 -right-8 w-2 h-2 bg-white rounded-full opacity-50 animate-ping" style={{animationDelay: '0.7s'}}></div>
+              <div className="absolute -bottom-4 -left-10 w-2.5 h-2.5 bg-white rounded-full opacity-55 animate-ping" style={{animationDelay: '1.2s'}}></div>
+              <div className="absolute -bottom-6 -right-6 w-3 h-3 bg-white rounded-full opacity-45 animate-ping" style={{animationDelay: '1.8s'}}></div>
             </div>
             
             <p className="text-white text-3xl animate-slide-up relative z-10 font-bold" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
