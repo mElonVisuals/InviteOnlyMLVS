@@ -83,6 +83,30 @@ export default function DashboardPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
+    // Check for OAuth2 session data in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauthSession = urlParams.get('session');
+    
+    if (oauthSession) {
+      try {
+        const sessionData = JSON.parse(decodeURIComponent(oauthSession));
+        localStorage.setItem('sessionData', JSON.stringify(sessionData));
+        setSessionData(sessionData);
+        
+        // Clean URL
+        window.history.replaceState({}, document.title, '/dashboard');
+        
+        fetchDashboardData();
+        const interval = setInterval(fetchDashboardData, 30000);
+        return () => clearInterval(interval);
+      } catch (error) {
+        console.error('Error parsing OAuth session data:', error);
+        setLocation('/');
+        return;
+      }
+    }
+    
+    // Check for stored session data
     const storedSession = localStorage.getItem('sessionData');
     if (storedSession) {
       try {

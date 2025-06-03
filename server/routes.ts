@@ -142,10 +142,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Discord OAuth2 callback handler
   app.get("/api/discord/callback", async (req, res) => {
     try {
-      const { code } = req.query;
+      const { code, error } = req.query;
+      
+      if (error) {
+        return res.redirect(`/?error=discord_${error}`);
+      }
       
       if (!code) {
-        return res.redirect('/?error=missing_code');
+        return res.redirect('/?error=direct_access_not_allowed');
       }
 
       const clientId = process.env.VITE_DISCORD_CLIENT_ID;
@@ -205,14 +209,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         discordUsername: userData.username
       });
 
-      // Set session cookie or redirect with session data
-      req.session = req.session || {};
-      req.session.userId = session.id;
-      req.session.discordId = userData.id;
-      req.session.discordUsername = userData.username;
-
-      // Redirect to dashboard with success
-      res.redirect('/dashboard?auth=success');
+      // Redirect to dashboard with session data as URL params (temporary solution)
+      const sessionData = {
+        sessionId: session.id,
+        accessTime: session.accessTime,
+        inviteCode: 'DISCORD_OAUTH',
+        discordUsername: userData.username,
+        discordUserId: userData.id,
+        userAgent: req.headers['user-agent'] || null,
+        usedAt: new Date().toISOString()
+      };
+      
+      // Encode session data for URL
+      const encodedSession = encodeURIComponent(JSON.stringify(sessionData));
+      res.redirect(`/dashboard?auth=success&session=${encodedSession}`);
     } catch (error) {
       console.error("Discord OAuth callback error:", error);
       res.redirect('/?error=oauth_failed');
