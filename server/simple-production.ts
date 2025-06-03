@@ -122,6 +122,30 @@ async function startDiscordBot() {
             ephemeral: true
           });
         }
+      } else if (interaction.commandName === 'report') {
+        try {
+          const reportType = interaction.options.getString('type');
+          const content = interaction.options.getString('content');
+
+          // Save report to database
+          await pool.query(`
+            INSERT INTO reports (discord_user_id, discord_username, content, report_type, status, created_at)
+            VALUES ($1, $2, $3, $4, 'pending', NOW())
+          `, [interaction.user.id, interaction.user.username, content, reportType]);
+
+          await interaction.reply({
+            content: `Your ${reportType} report has been submitted successfully. Thank you for your feedback!\n\nReport ID: #${Date.now().toString().slice(-6)}`,
+            ephemeral: true
+          });
+
+          log(`Discord bot: Report submitted by ${interaction.user.tag}: ${reportType}`);
+        } catch (error) {
+          log(`Discord bot: Error handling report: ${error}`);
+          await interaction.reply({
+            content: 'An error occurred while submitting your report. Please try again.',
+            ephemeral: true
+          });
+        }
       }
     });
 
