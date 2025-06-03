@@ -322,7 +322,7 @@ export default function InvitePage() {
             <Button
               onClick={() => requestInviteMutation.mutate()}
               disabled={requestInviteMutation.isPending}
-              className="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white font-medium py-3 px-8 rounded-xl transition-all duration-500 flex items-center justify-center space-x-2 shadow-lg hover:shadow-purple-500/30 transform hover:scale-105 border border-purple-500/30"
+              className="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white font-medium py-3 px-8 rounded-xl transition-all duration-500 flex items-center justify-center space-x-2 shadow-lg hover:shadow-purple-500/30 transform hover:scale-105 border border-purple-500/30 mx-auto"
             >
               {requestInviteMutation.isPending ? (
                 <>
