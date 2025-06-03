@@ -13,6 +13,8 @@ import UsersPage from "@/pages/users";
 import SystemPage from "@/pages/system-enhanced";
 import ReportsPage from "@/pages/reports-enhanced";
 import SettingsPage from "@/pages/settings-enhanced";
+import AdminPage from "@/pages/admin";
+import DiscordLoginPage from "@/pages/discord-login";
 import { useEffect } from "react";
 
 function Router() {
@@ -28,6 +30,8 @@ function Router() {
       <Route path="/system" component={SystemPage} />
       <Route path="/reports" component={ReportsPage} />
       <Route path="/settings" component={SettingsPage} />
+      <Route path="/admin" component={AdminPage} />
+      <Route path="/discord-login" component={DiscordLoginPage} />
       <Route component={InvitePage} />
     </Switch>
   );

@@ -268,6 +268,102 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Discord login endpoint
+  app.post("/api/discord-login", async (req, res) => {
+    try {
+      const { discordUserId, discordUsername } = req.body;
+      
+      if (!discordUserId || !discordUsername) {
+        return res.status(400).json({
+          success: false,
+          message: "Discord user ID and username are required"
+        });
+      }
+
+      // Check if user exists and has previous access
+      const existingUser = await storage.getUserByDiscord(discordUserId);
+      if (!existingUser) {
+        return res.status(404).json({
+          success: false,
+          message: "No previous access found. Please request a new invite code."
+        });
+      }
+
+      // Create new session for returning user
+      const newSession = await storage.createSession({
+        inviteCodeId: existingUser.id,
+        userAgent: req.headers['user-agent']
+      });
+
+      // Update persistent user login time
+      await storage.createPersistentUser(discordUserId, discordUsername);
+
+      res.json({
+        success: true,
+        message: "Login successful",
+        session: {
+          id: newSession.id,
+          accessTime: newSession.accessTime,
+          discordUsername: existingUser.discord_username
+        }
+      });
+    } catch (error) {
+      console.error("Error with Discord login:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Internal server error" 
+      });
+    }
+  });
+
+  // Admin panel - Check admin status
+  app.get("/api/admin/check", async (req, res) => {
+    try {
+      const { discordUserId } = req.query;
+      const ADMIN_USER_ID = "952705075711729695";
+      
+      const isAdmin = discordUserId === ADMIN_USER_ID;
+      
+      res.json({
+        success: true,
+        isAdmin
+      });
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Internal server error" 
+      });
+    }
+  });
+
+  // Admin panel - Get all users with member role
+  app.get("/api/admin/users", async (req, res) => {
+    try {
+      const { discordUserId } = req.query;
+      const ADMIN_USER_ID = "952705075711729695";
+      
+      if (discordUserId !== ADMIN_USER_ID) {
+        return res.status(403).json({
+          success: false,
+          message: "Access denied. Admin privileges required."
+        });
+      }
+
+      const users = await storage.getUsersWithMemberRole();
+      res.json({ 
+        success: true,
+        users 
+      });
+    } catch (error) {
+      console.error("Error fetching admin users:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Internal server error" 
+      });
+    }
+  });
+
   function calculateSystemUptime() {
     const startTime = new Date('2024-06-01');
     const now = new Date();

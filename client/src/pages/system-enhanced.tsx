@@ -279,7 +279,7 @@ export default function SystemPage() {
           </Card>
         </div>
 
-        {/* Services Status - Scrollable */}
+        {/* Services Status */}
         <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
           <CardHeader>
             <CardTitle className="text-white flex items-center">
@@ -288,7 +288,7 @@ export default function SystemPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="max-h-[400px] overflow-y-auto space-y-4 pr-2">
+            <div className="space-y-4">
               {services.map((service, index) => (
                 <div key={index} className="bg-white/5 rounded-lg p-4 border border-white/10">
                   <div className="flex items-center justify-between mb-2">
@@ -321,7 +321,7 @@ export default function SystemPage() {
           </CardContent>
         </Card>
 
-        {/* System Information - Scrollable */}
+        {/* System Information */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="bg-white/10 backdrop-blur-sm border-white/20">
             <CardHeader>
@@ -331,7 +331,7 @@ export default function SystemPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="max-h-[300px] overflow-y-auto space-y-3 pr-2">
+              <div className="space-y-3">
                 <div className="flex justify-between py-2 border-b border-white/10">
                   <span className="text-white/60">Platform</span>
                   <span className="text-white">Node.js</span>
@@ -378,7 +378,7 @@ export default function SystemPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="max-h-[300px] overflow-y-auto space-y-4 pr-2">
+              <div className="space-y-4">
                 <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
                   <div className="flex items-center space-x-2 mb-2">
                     <CheckCircleIcon className="w-4 h-4 text-green-400" />
