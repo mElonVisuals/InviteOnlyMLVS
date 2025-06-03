@@ -163,7 +163,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create new session for returning user
       const session = await storage.createSession({
-        inviteCodeId: null, // Special case for Discord login
+        inviteCodeId: undefined, // Special case for Discord login
         userAgent: req.headers['user-agent'] || null,
         discordUserId: discordUserId,
         discordUsername: discordUsername

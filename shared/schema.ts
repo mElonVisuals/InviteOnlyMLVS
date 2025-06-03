@@ -14,9 +14,11 @@ export const inviteCodes = pgTable("invite_codes", {
 
 export const sessions = pgTable("sessions", {
   id: serial("id").primaryKey(),
-  inviteCodeId: serial("invite_code_id").notNull(),
+  inviteCodeId: serial("invite_code_id"),
   accessTime: timestamp("access_time").defaultNow().notNull(),
   userAgent: text("user_agent"),
+  discordUserId: text("discord_user_id"),
+  discordUsername: text("discord_username"),
 });
 
 export const insertInviteCodeSchema = createInsertSchema(inviteCodes).pick({

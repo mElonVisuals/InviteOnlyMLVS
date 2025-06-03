@@ -240,7 +240,7 @@ export default function InvitePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-auto">
       {/* Enhanced Animated Background Patterns */}
       <div className="absolute inset-0">
         {/* Primary gradient overlay */}
@@ -272,8 +272,8 @@ export default function InvitePage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center p-4 relative z-10">
-        <div className="w-full max-w-md animate-fade-in">
+      <div className="flex-1 flex items-start justify-center p-4 relative z-10 py-8">
+        <div className="w-full max-w-md animate-fade-in mb-8">
           
 
 
