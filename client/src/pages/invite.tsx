@@ -118,19 +118,19 @@ export default function InvitePage() {
         <div className="w-full max-w-md animate-fade-in">
           
           {/* Header Section */}
-          <div className="text-center mb-10">
-            <div className="mx-auto w-64 h-32 mb-8 flex items-center justify-center">
+          <div className="text-center mb-10 relative">
+            <div className="mx-auto w-96 h-48 mb-8 flex items-center justify-center relative z-0">
               <img 
                 src={mlvsLogo} 
                 alt="MLVS District" 
-                className="max-w-full max-h-full object-contain"
+                className="w-full h-full object-contain opacity-90"
               />
             </div>
-            <div className="flex items-center justify-center space-x-2 mb-4 animate-slide-up" style={{animationDelay: '0.2s'}}>
+            <div className="flex items-center justify-center space-x-2 mb-4 animate-slide-up relative z-10" style={{animationDelay: '0.2s'}}>
               <ShieldCheckIcon className="text-blue-400 w-6 h-6 animate-pulse" />
               <span className="text-blue-400 font-medium text-lg">Secure Access Portal</span>
             </div>
-            <p className="text-slate-300 text-xl animate-slide-up" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
+            <p className="text-slate-300 text-xl animate-slide-up relative z-10" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
           </div>
 
           {/* Invite Form */}
