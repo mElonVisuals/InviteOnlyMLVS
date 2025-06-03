@@ -1,6 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { storage } from "./storage";
+import { pool } from "./db";
 import path from "path";
 import fs from "fs";
 
@@ -66,11 +66,49 @@ function serveStatic(app: express.Express) {
   });
 }
 
-(async () => {
-  // Initialize database with default invite codes
-  await storage.initializeInviteCodes();
-  log("Database initialized with invite codes");
+async function initializeDatabase() {
+  try {
+    log('Initializing database tables...');
+    
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS invite_codes (
+        id SERIAL PRIMARY KEY,
+        code TEXT UNIQUE NOT NULL,
+        is_used TEXT NOT NULL DEFAULT 'false',
+        used_at TIMESTAMP,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id SERIAL PRIMARY KEY,
+        invite_code_id SERIAL NOT NULL,
+        access_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        user_agent TEXT
+      );
+    `);
+
+    const initialCodes = ['ALPHA-2024', 'BETA-ACCESS', 'EARLY-BIRD', 'VIP-MEMBER', 'DEMO-CODE'];
+    
+    for (const code of initialCodes) {
+      await pool.query(`
+        INSERT INTO invite_codes (code) 
+        VALUES ($1) 
+        ON CONFLICT (code) DO NOTHING;
+      `, [code]);
+    }
+
+    log('Database initialization complete');
+    
+  } catch (error) {
+    log(`Database initialization error: ${error}`);
+    throw error;
+  }
+}
+
+(async () => {
+  await initializeDatabase();
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

@@ -44,17 +44,19 @@ async function initializeDatabase() {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS invite_codes (
         id SERIAL PRIMARY KEY,
-        code VARCHAR(50) UNIQUE NOT NULL,
-        used BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        code TEXT UNIQUE NOT NULL,
+        is_used TEXT NOT NULL DEFAULT 'false',
+        used_at TIMESTAMP,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS sessions (
         id SERIAL PRIMARY KEY,
-        access_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        invite_code_id SERIAL NOT NULL,
+        access_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        user_agent TEXT
       );
     `);
 
