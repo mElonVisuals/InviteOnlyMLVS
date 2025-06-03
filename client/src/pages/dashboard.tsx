@@ -40,6 +40,7 @@ export default function DashboardPage() {
   const [, setLocation] = useLocation();
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 1247,
     activeConnections: 89,
@@ -63,6 +64,19 @@ export default function DashboardPage() {
     }
   }, [setLocation]);
 
+  // Close notifications when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (notificationsOpen && !target.closest('.notifications-dropdown') && !target.closest('[data-notification-trigger]')) {
+        setNotificationsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [notificationsOpen]);
+
   const handleLogout = () => {
     localStorage.removeItem('sessionData');
     setLocation('/');
@@ -80,6 +94,51 @@ export default function DashboardPage() {
     { icon: FileTextIcon, label: "Reports", path: "/reports" },
     { icon: SettingsIcon, label: "Settings", path: "/settings" },
   ];
+
+  const notifications = [
+    {
+      id: 1,
+      title: "System Update Available",
+      message: "New security patches are ready to install",
+      time: "2 minutes ago",
+      type: "info",
+      unread: true
+    },
+    {
+      id: 2,
+      title: "High CPU Usage Alert",
+      message: "Server load is above 85% for the last 10 minutes",
+      time: "15 minutes ago", 
+      type: "warning",
+      unread: true
+    },
+    {
+      id: 3,
+      title: "New User Registration",
+      message: "3 new users have joined the platform",
+      time: "1 hour ago",
+      type: "success",
+      unread: true
+    },
+    {
+      id: 4,
+      title: "Backup Completed",
+      message: "Daily database backup finished successfully",
+      time: "3 hours ago",
+      type: "success",
+      unread: false
+    },
+    {
+      id: 5,
+      title: "Security Scan Complete",
+      message: "Weekly security audit found no vulnerabilities",
+      time: "1 day ago",
+      type: "info",
+      unread: false
+    }
+  ];
+
+  const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
@@ -167,14 +226,77 @@ export default function DashboardPage() {
                     className="bg-white/10 border border-white/20 rounded-lg pl-10 pr-4 py-2 text-white placeholder-white/40 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400/50"
                   />
                 </div>
-                <Button
-                  className="bg-white/10 hover:bg-white/20 text-white border border-white/20 relative"
-                  variant="outline"
-                  size="sm"
-                >
-                  <BellIcon className="w-4 h-4" />
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">3</span>
-                </Button>
+                <div className="relative">
+                  <Button
+                    onClick={() => setNotificationsOpen(!notificationsOpen)}
+                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 relative"
+                    variant="outline"
+                    size="sm"
+                    data-notification-trigger
+                  >
+                    <BellIcon className="w-4 h-4" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </Button>
+
+                  {/* Notifications Dropdown */}
+                  {notificationsOpen && (
+                    <div className="notifications-dropdown absolute right-0 top-12 w-80 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-xl shadow-2xl z-50">
+                      <div className="p-4 border-b border-white/20">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-white font-medium">Notifications</h3>
+                          <Button
+                            onClick={() => setNotificationsOpen(false)}
+                            className="bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                            variant="outline"
+                            size="sm"
+                          >
+                            <XIcon className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="max-h-96 overflow-y-auto">
+                        {notifications.map((notification) => (
+                          <div 
+                            key={notification.id} 
+                            className={`p-4 border-b border-white/10 hover:bg-white/5 transition-colors ${
+                              notification.unread ? 'bg-blue-500/5' : ''
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-2">
+                                  <h4 className={`text-sm font-medium ${notification.unread ? 'text-white' : 'text-white/70'}`}>
+                                    {notification.title}
+                                  </h4>
+                                  {notification.unread && (
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                  )}
+                                </div>
+                                <p className="text-white/60 text-xs mt-1">{notification.message}</p>
+                                <p className="text-white/40 text-xs mt-2">{notification.time}</p>
+                              </div>
+                              <div className={`w-2 h-2 rounded-full ml-3 mt-1 ${
+                                notification.type === 'warning' ? 'bg-yellow-500' :
+                                notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+                              }`}></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="p-4 border-t border-white/20">
+                        <Button className="w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 text-sm">
+                          View All Notifications
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </header>
