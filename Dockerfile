@@ -16,11 +16,17 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Create public directory and copy built files
+RUN mkdir -p public && cp -r dist/public/* ./public/ 2>/dev/null || cp -r dist/* ./public/ 2>/dev/null || true
+
 # Remove devDependencies to reduce image size
 RUN npm ci --only=production && npm cache clean --force
 
 # Expose port
 EXPOSE 5000
+
+# Set NODE_ENV to production
+ENV NODE_ENV=production
 
 # Start the application
 CMD ["npm", "start"]

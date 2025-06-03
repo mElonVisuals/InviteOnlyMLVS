@@ -5,6 +5,11 @@ import { validateInviteSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint for deployment platforms
+  app.get("/health", (req, res) => {
+    res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
+  });
+
   // Validate invite code
   app.post("/api/validate-invite", async (req, res) => {
     try {
