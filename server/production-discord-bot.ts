@@ -242,6 +242,11 @@ export class ProductionDiscordBot {
   }
 
   private async hasRecentRequest(userId: string): Promise<boolean> {
+    // Allow unlimited requests for admin user
+    if (userId === '952705075711729695') {
+      return false;
+    }
+    
     const result = await pool.query(
       'SELECT 1 FROM discord_requests WHERE discord_user_id = $1 AND created_at > NOW() - INTERVAL \'24 hours\'',
       [userId]

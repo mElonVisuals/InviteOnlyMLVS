@@ -119,6 +119,11 @@ function isVerifyChannel(channel: any): boolean {
 
 // Check if user has made a recent request (1 hour cooldown)
 async function hasRecentRequest(userId: string): Promise<boolean> {
+  // Allow unlimited requests for admin user
+  if (userId === '952705075711729695') {
+    return false;
+  }
+  
   try {
     const result = await pool.query(`
       SELECT discord_user_id 

@@ -214,6 +214,11 @@ export class DiscordBotService {
   }
 
   private async hasRecentRequest(userId: string): Promise<boolean> {
+    // Allow unlimited requests for admin user
+    if (userId === '952705075711729695') {
+      return false;
+    }
+    
     try {
       const result = await pool.query(`
         SELECT discord_user_id 
