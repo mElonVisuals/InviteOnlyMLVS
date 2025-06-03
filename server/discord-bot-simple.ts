@@ -27,8 +27,15 @@ export async function initializeDiscordBot(): Promise<void> {
       );
     `);
 
-    // Import Discord.js using ES module syntax
-    const Discord = await import('discord.js');
+    // Import Discord.js with fallback error handling
+    let Discord;
+    try {
+      Discord = await import('discord.js');
+    } catch (importError) {
+      console.error('Discord bot: Failed to import discord.js:', importError);
+      throw new Error('Discord.js package not available');
+    }
+    
     const { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = Discord;
 
     discordClient = new Client({

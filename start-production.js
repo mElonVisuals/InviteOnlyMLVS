@@ -11,7 +11,7 @@ console.log('- DISCORD_GUILD_ID:', process.env.DISCORD_GUILD_ID ? 'Present' : 'M
 console.log('- PORT:', process.env.PORT || '5000');
 
 // Start the main application directly using tsx
-const app = spawn('npx', ['tsx', 'server/production.ts'], {
+const app = spawn('npx', ['tsx', 'server/simple-production.ts'], {
   stdio: 'inherit',
   env: process.env
 });
