@@ -223,7 +223,7 @@ export default function InvitePage() {
                       id="invite-code"
                       value={inviteCode}
                       onChange={handleInputChange}
-                      className="w-full px-6 py-5 bg-white/8 border border-white/20 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400/50 transition-all duration-300 text-xl font-mono tracking-wider uppercase pr-14 text-white placeholder-white/40 backdrop-blur-sm hover:bg-white/12 focus:bg-white/12 group-hover:shadow-xl shadow-inner"
+                      className="w-full px-6 py-5 bg-white/90 border border-white/20 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400/50 transition-all duration-300 text-xl font-mono tracking-wider uppercase pr-14 text-black placeholder-gray-500 backdrop-blur-sm hover:bg-white/95 focus:bg-white/95 group-hover:shadow-xl shadow-inner"
                       placeholder="ENTER-CODE-HERE"
                       maxLength={16}
                       required
