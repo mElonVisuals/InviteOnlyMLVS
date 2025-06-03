@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,6 +41,8 @@ export default function DashboardPage() {
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
+  const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 1247,
     activeConnections: 89,
@@ -80,6 +82,17 @@ export default function DashboardPage() {
   const handleLogout = () => {
     localStorage.removeItem('sessionData');
     setLocation('/');
+  };
+
+  const handleNotificationToggle = () => {
+    if (!notificationsOpen && notificationButtonRef.current) {
+      const rect = notificationButtonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right
+      });
+    }
+    setNotificationsOpen(!notificationsOpen);
   };
 
   if (!sessionData) {
@@ -232,7 +245,6 @@ export default function DashboardPage() {
                     className="bg-white/10 hover:bg-white/20 text-white border border-white/20 relative"
                     variant="outline"
                     size="sm"
-                    data-notification-trigger
                   >
                     <BellIcon className="w-4 h-4" />
                     {unreadCount > 0 && (
@@ -244,7 +256,7 @@ export default function DashboardPage() {
 
                   {/* Notifications Dropdown */}
                   {notificationsOpen && (
-                    <div className="notifications-dropdown absolute right-0 top-12 w-80 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-xl shadow-2xl z-50">
+                    <div className="absolute right-0 top-12 w-80 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-xl shadow-2xl z-[100]">
                       <div className="p-4 border-b border-white/20">
                         <div className="flex items-center justify-between">
                           <h3 className="text-white font-medium">Notifications</h3>
