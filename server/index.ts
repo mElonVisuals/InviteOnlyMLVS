@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { pool } from "./db";
+import { startDiscordBot } from "./discord-bot";
 
 const app = express();
 app.use(express.json());
@@ -80,6 +81,12 @@ async function initializeDatabase() {
 
 (async () => {
   await initializeDatabase();
+  
+  // Start Discord bot alongside the web server
+  startDiscordBot().catch(error => {
+    log(`Discord bot startup failed: ${error.message}`);
+  });
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
