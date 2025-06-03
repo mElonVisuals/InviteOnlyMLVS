@@ -1,6 +1,5 @@
-import { pool } from './db';
+import { pool } from "./db";
 
-// Production Discord bot with automatic command registration
 export class ProductionDiscordBot {
   private client: any = null;
   private isStarted = false;
@@ -18,22 +17,8 @@ export class ProductionDiscordBot {
     }
 
     try {
-      // Dynamic import with fallback
-      let Discord;
-      try {
-        Discord = await import('discord.js');
-      } catch (importError) {
-        Discord = require('discord.js');
-      }
+      const { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, ActivityType } = await import('discord.js');
       
-      const { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, REST, Routes } = Discord;
-
-      console.log('Starting Discord bot service...');
-
-      // Create necessary tables
-      await this.createTables();
-
-      // Initialize client
       this.client = new Client({
         intents: [
           GatewayIntentBits.Guilds,
@@ -96,39 +81,39 @@ export class ProductionDiscordBot {
         if (!interaction.isChatInputCommand()) return;
 
         try {
-          switch (interaction.commandName) {
-            case 'request-access':
-              await this.handleRequestAccess(interaction, EmbedBuilder);
-              break;
-            case 'generate-bulk':
-              await this.handleGenerateBulk(interaction, EmbedBuilder, PermissionFlagsBits);
-              break;
-            case 'code-stats':
-              await this.handleCodeStats(interaction, EmbedBuilder, PermissionFlagsBits);
-              break;
-            case 'report':
-              await this.handleReport(interaction, EmbedBuilder);
-              break;
+          if (interaction.commandName === 'request-access') {
+            await this.handleRequestAccess(interaction, EmbedBuilder);
+          } else if (interaction.commandName === 'generate-bulk') {
+            const { PermissionFlagsBits } = await import('discord.js');
+            await this.handleGenerateBulk(interaction, EmbedBuilder, PermissionFlagsBits);
+          } else if (interaction.commandName === 'code-stats') {
+            const { PermissionFlagsBits } = await import('discord.js');
+            await this.handleCodeStats(interaction, EmbedBuilder, PermissionFlagsBits);
+          } else if (interaction.commandName === 'report') {
+            await this.handleReport(interaction, EmbedBuilder);
           }
         } catch (error) {
           console.error('Command error:', error);
-          try {
-            await interaction.reply({
-              content: 'An error occurred while processing your request.',
-              ephemeral: true
-            });
-          } catch (replyError) {
-            console.error('Failed to send error reply:', replyError);
+          
+          const errorEmbed = new EmbedBuilder()
+            .setTitle('Error')
+            .setDescription('An error occurred while processing your command.')
+            .setColor(0xff0000)
+            .setTimestamp();
+
+          if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({ embeds: [errorEmbed], ephemeral: true });
+          } else {
+            await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
           }
         }
       });
 
       this.client.on('error', (error: Error) => {
-        console.error('Discord bot error:', error);
+        console.error('Discord client error:', error);
       });
 
       await this.client.login(token);
-
     } catch (error) {
       console.error('Failed to start Discord bot:', error);
     }
@@ -139,10 +124,10 @@ export class ProductionDiscordBot {
       await pool.query(`
         CREATE TABLE IF NOT EXISTS discord_requests (
           id SERIAL PRIMARY KEY,
-          discord_user_id TEXT UNIQUE NOT NULL,
+          discord_user_id TEXT NOT NULL,
           invite_code TEXT NOT NULL,
           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
+        )
       `);
 
       await pool.query(`
@@ -152,40 +137,29 @@ export class ProductionDiscordBot {
           discord_username TEXT NOT NULL,
           content TEXT NOT NULL,
           report_type TEXT NOT NULL,
-          status TEXT DEFAULT 'open',
-          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          status TEXT NOT NULL DEFAULT 'open'
+        )
       `);
     } catch (error) {
-      console.error('Error creating Discord bot tables:', error);
+      console.error('Error creating Discord tables:', error);
     }
   }
 
   private async forceRegisterCommands(token: string, guildId?: string): Promise<void> {
     try {
-      let Discord;
-      try {
-        Discord = await import('discord.js');
-      } catch (importError) {
-        Discord = require('discord.js');
-      }
-      
-      const { REST, Routes } = Discord;
+      const { REST, Routes } = await import('discord.js');
       const rest = new REST({ version: '10' }).setToken(token);
-
-      console.log('Registering Discord slash commands...');
 
       const commandData = this.commands.map(command => command.toJSON());
 
       if (guildId) {
-        // Register guild-specific commands (faster)
         await rest.put(
           Routes.applicationGuildCommands(this.client.user.id, guildId),
           { body: commandData }
         );
         console.log(`Successfully registered ${commandData.length} guild commands for guild ${guildId}`);
       } else {
-        // Register global commands (slower but works everywhere)
         await rest.put(
           Routes.applicationCommands(this.client.user.id),
           { body: commandData }
@@ -217,16 +191,6 @@ export class ProductionDiscordBot {
   private async codeExists(code: string): Promise<boolean> {
     const result = await pool.query('SELECT 1 FROM invite_codes WHERE code = $1', [code]);
     return result.rows.length > 0;
-  }
-
-  private async insertInviteCode(code: string): Promise<boolean> {
-    try {
-      await pool.query('INSERT INTO invite_codes (code) VALUES ($1)', [code]);
-      return true;
-    } catch (error) {
-      console.error('Error inserting invite code:', error);
-      return false;
-    }
   }
 
   private async generateUniqueCode(): Promise<string> {
@@ -438,38 +402,6 @@ export class ProductionDiscordBot {
       const errorEmbed = new EmbedBuilder()
         .setTitle('Error')
         .setDescription('Failed to submit report. Please try again later.')
-        .setColor(0xff0000)
-        .setTimestamp();
-
-      await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
-    }
-  }
-}
-
-      const typeLabels: { [key: string]: string } = {
-        'bug': 'Bug Report',
-        'user': 'User Report', 
-        'general': 'General Issue',
-        'suggestion': 'Suggestion'
-      };
-
-      const embed = new EmbedBuilder()
-        .setTitle('Report Submitted Successfully')
-        .setDescription(`Your ${typeLabels[reportType]} has been submitted to the admin team.`)
-        .addFields(
-          { name: 'Report Type', value: typeLabels[reportType], inline: true },
-          { name: 'Submitted By', value: username, inline: true }
-        )
-        .setColor(0x00ff00)
-        .setTimestamp();
-
-      await interaction.reply({ embeds: [embed], ephemeral: true });
-    } catch (error) {
-      console.error('Error submitting report:', error);
-      
-      const errorEmbed = new EmbedBuilder()
-        .setTitle('Report Submission Failed')
-        .setDescription('There was an error submitting your report. Please try again later.')
         .setColor(0xff0000)
         .setTimestamp();
 
