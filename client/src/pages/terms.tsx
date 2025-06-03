@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, FileTextIcon } from "lucide-react";
-import mlvsLogo from "@assets/mlvs_district (2).png";
+import mlvsLogo from "@assets/mlvs_district (1) (1).png";
 
 export default function TermsPage() {
   return (
