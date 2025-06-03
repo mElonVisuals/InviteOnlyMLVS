@@ -85,22 +85,12 @@ client.once('ready', () => {
 async function registerCommands() {
   const commands = [
     new SlashCommandBuilder()
-      .setName('generate-code')
-      .setDescription('Generate a new invite code for MLVS District')
-      .addStringOption(option =>
-        option.setName('type')
-          .setDescription('Type of invite code')
-          .setRequired(false)
-          .addChoices(
-            { name: 'Standard', value: 'standard' },
-            { name: 'VIP', value: 'vip' },
-            { name: 'Staff', value: 'staff' }
-          )
-      ),
+      .setName('request-access')
+      .setDescription('Request an invite code for MLVS District access'),
     
     new SlashCommandBuilder()
       .setName('generate-bulk')
-      .setDescription('Generate multiple invite codes')
+      .setDescription('Generate multiple invite codes (Admin only)')
       .addIntegerOption(option =>
         option.setName('count')
           .setDescription('Number of codes to generate (1-50)')
@@ -111,7 +101,7 @@ async function registerCommands() {
       
     new SlashCommandBuilder()
       .setName('code-stats')
-      .setDescription('Show invite code statistics'),
+      .setDescription('Show invite code statistics (Admin only)'),
   ];
 
   try {
@@ -122,6 +112,20 @@ async function registerCommands() {
   }
 }
 
+// Configuration
+const VERIFY_CHANNEL_NAME = 'verify'; // Channel name where users can request codes
+const ADMIN_ROLE_NAME = 'Admin'; // Role name for admin commands
+
+// Check if user is admin
+function isAdmin(member) {
+  return member.roles.cache.some(role => role.name === ADMIN_ROLE_NAME);
+}
+
+// Check if command is used in verify channel
+function isVerifyChannel(channel) {
+  return channel.name === VERIFY_CHANNEL_NAME;
+}
+
 // Handle slash command interactions
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -129,8 +133,8 @@ client.on('interactionCreate', async (interaction) => {
   const { commandName } = interaction;
 
   try {
-    if (commandName === 'generate-code') {
-      await handleGenerateCode(interaction);
+    if (commandName === 'request-access') {
+      await handleRequestAccess(interaction);
     } else if (commandName === 'generate-bulk') {
       await handleGenerateBulk(interaction);
     } else if (commandName === 'code-stats') {
@@ -153,43 +157,136 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
-// Handle generate-code command
-async function handleGenerateCode(interaction) {
-  await interaction.deferReply();
+// Check if user has already requested a code recently
+async function hasRecentRequest(userId) {
+  try {
+    const result = await pool.query(
+      'SELECT created_at FROM invite_codes WHERE user_id = $1 AND created_at >= NOW() - INTERVAL \'1 hour\' ORDER BY created_at DESC LIMIT 1',
+      [userId]
+    );
+    return result.rows.length > 0;
+  } catch (error) {
+    console.error('Recent request check error:', error);
+    return false;
+  }
+}
+
+// Handle request-access command
+async function handleRequestAccess(interaction) {
+  // Check if command is used in verify channel
+  if (!isVerifyChannel(interaction.channel)) {
+    const errorEmbed = new EmbedBuilder()
+      .setColor(0xFF0000)
+      .setTitle('❌ Wrong Channel')
+      .setDescription(`This command can only be used in the #${VERIFY_CHANNEL_NAME} channel.`)
+      .setTimestamp();
+
+    await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+    return;
+  }
+
+  await interaction.deferReply({ ephemeral: true });
   
-  const type = interaction.options.getString('type') || 'standard';
+  const userId = interaction.user.id;
+  const username = interaction.user.username;
   
   try {
+    // Check if user has requested recently
+    const hasRecent = await hasRecentRequest(userId);
+    if (hasRecent) {
+      const errorEmbed = new EmbedBuilder()
+        .setColor(0xFF6600)
+        .setTitle('⏰ Cooldown Active')
+        .setDescription('You can only request one invite code per hour. Please wait before requesting again.')
+        .setTimestamp();
+
+      await interaction.editReply({ embeds: [errorEmbed] });
+      return;
+    }
+
+    // Generate unique code
     const code = await generateUniqueCode();
-    await insertInviteCode(code);
     
-    const embed = new EmbedBuilder()
+    // Insert code with user ID
+    await pool.query(
+      'INSERT INTO invite_codes (code, is_used, created_at, user_id) VALUES ($1, $2, $3, $4)',
+      [code, 'false', new Date(), userId]
+    );
+    
+    // Send code privately to user
+    const privateEmbed = new EmbedBuilder()
       .setColor(0x00FF00)
-      .setTitle('🎫 New Invite Code Generated')
-      .setDescription(`**Code:** \`${code}\``)
+      .setTitle('🎫 Your MLVS District Access Code')
+      .setDescription(`**Your exclusive invite code:** \`${code}\``)
       .addFields(
-        { name: 'Type', value: type.charAt(0).toUpperCase() + type.slice(1), inline: true },
-        { name: 'Status', value: 'Unused', inline: true },
-        { name: 'Created', value: new Date().toLocaleString(), inline: true }
+        { name: 'How to use:', value: 'Visit the MLVS District website and enter this code to gain access.', inline: false },
+        { name: 'Valid until:', value: 'This code never expires but can only be used once.', inline: false },
+        { name: 'Important:', value: 'Keep this code private. Do not share it with others.', inline: false }
       )
       .setFooter({ text: 'MLVS District Access Control' })
       .setTimestamp();
 
-    await interaction.editReply({ embeds: [embed] });
+    // Send private message to user
+    try {
+      await interaction.user.send({ embeds: [privateEmbed] });
+      
+      // Confirm in channel (ephemeral)
+      const confirmEmbed = new EmbedBuilder()
+        .setColor(0x00FF00)
+        .setTitle('✅ Code Sent')
+        .setDescription('Your invite code has been sent to your direct messages. Check your DMs!')
+        .setTimestamp();
+
+      await interaction.editReply({ embeds: [confirmEmbed] });
+      
+    } catch (dmError) {
+      // If DM fails, send code ephemerally in channel
+      console.error('DM failed, sending ephemeral message:', dmError);
+      
+      const fallbackEmbed = new EmbedBuilder()
+        .setColor(0x00FF00)
+        .setTitle('🎫 Your MLVS District Access Code')
+        .setDescription(`**Your exclusive invite code:** \`${code}\``)
+        .addFields(
+          { name: 'How to use:', value: 'Visit the MLVS District website and enter this code to gain access.', inline: false },
+          { name: 'Important:', value: 'This message is only visible to you. Keep your code private.', inline: false }
+        )
+        .setFooter({ text: 'MLVS District Access Control' })
+        .setTimestamp();
+
+      await interaction.editReply({ embeds: [fallbackEmbed] });
+    }
+    
+    // Log the request
+    console.log(`Access code ${code} generated for user ${username} (${userId})`);
     
   } catch (error) {
+    console.error('Request access error:', error);
+    
     const errorEmbed = new EmbedBuilder()
       .setColor(0xFF0000)
       .setTitle('❌ Generation Failed')
-      .setDescription('Failed to generate invite code. Please try again.')
+      .setDescription('Failed to generate invite code. Please try again later.')
       .setTimestamp();
 
     await interaction.editReply({ embeds: [errorEmbed] });
   }
 }
 
-// Handle generate-bulk command
+// Handle generate-bulk command (Admin only)
 async function handleGenerateBulk(interaction) {
+  // Check if user is admin
+  if (!isAdmin(interaction.member)) {
+    const errorEmbed = new EmbedBuilder()
+      .setColor(0xFF0000)
+      .setTitle('❌ Permission Denied')
+      .setDescription('This command is only available to administrators.')
+      .setTimestamp();
+
+    await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+    return;
+  }
+
   await interaction.deferReply();
   
   const count = interaction.options.getInteger('count');
@@ -227,8 +324,20 @@ async function handleGenerateBulk(interaction) {
   }
 }
 
-// Handle code-stats command
+// Handle code-stats command (Admin only)
 async function handleCodeStats(interaction) {
+  // Check if user is admin
+  if (!isAdmin(interaction.member)) {
+    const errorEmbed = new EmbedBuilder()
+      .setColor(0xFF0000)
+      .setTitle('❌ Permission Denied')
+      .setDescription('This command is only available to administrators.')
+      .setTimestamp();
+
+    await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+    return;
+  }
+
   await interaction.deferReply();
   
   try {
