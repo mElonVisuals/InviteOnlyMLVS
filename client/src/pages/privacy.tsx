@@ -49,114 +49,100 @@ export default function PrivacyPage() {
                 </div>
                 <h1 className="text-4xl font-bold text-white mb-4">Privacy Policy</h1>
                 <p className="text-white/70 text-lg">Last updated: {new Date().toLocaleDateString()}</p>
+                <div className="mt-4 p-4 bg-green-500/20 rounded-xl border border-green-400/30">
+                  <p className="text-green-100 font-medium">This is a hobby project - we do not collect any personal information.</p>
+                </div>
               </div>
 
               {/* Content */}
               <div className="prose prose-invert max-w-none space-y-8">
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">1. Information We Collect</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">1. No Data Collection</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>We collect information you provide directly to us when using our invite-only platform:</p>
+                    <p>This is a hobby project created for educational and demonstration purposes. We do not collect, store, or process any personal information from users.</p>
+                    <p>The only data processed is:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Invite codes used to access the platform</li>
-                      <li>Access timestamps and session data</li>
-                      <li>Browser information and user agent data</li>
-                      <li>IP address for security and analytics purposes</li>
+                      <li>Invite codes for access validation (not linked to personal identity)</li>
+                      <li>Temporary session data stored locally in your browser</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">2. How We Use Your Information</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">2. Local Storage</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>We use the collected information for:</p>
+                    <p>The website may use browser local storage to:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Providing secure access to our platform</li>
-                      <li>Maintaining invite code validation and security</li>
-                      <li>Analyzing platform usage and performance</li>
-                      <li>Preventing unauthorized access and abuse</li>
-                      <li>Improving our services and user experience</li>
+                      <li>Remember if you've successfully entered an invite code</li>
+                      <li>Store user preferences for the current session</li>
+                      <li>Enable proper functioning of the website</li>
+                    </ul>
+                    <p>This information stays on your device and is not transmitted to any servers.</p>
+                  </div>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold text-white mb-4">3. No Third-Party Services</h2>
+                  <div className="text-white/80 space-y-4">
+                    <p>This hobby project does not integrate with:</p>
+                    <ul className="list-disc list-inside space-y-2 ml-4">
+                      <li>Analytics services (Google Analytics, etc.)</li>
+                      <li>Social media tracking pixels</li>
+                      <li>Advertising networks</li>
+                      <li>External data collection services</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">3. Information Sharing</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">4. Server Logs</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>We do not sell, trade, or otherwise transfer your personal information to third parties except:</p>
+                    <p>Standard web server logs may temporarily record:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>When required by law or legal process</li>
-                      <li>To protect our rights, property, or safety</li>
-                      <li>With trusted service providers who assist in operating our platform</li>
-                      <li>In connection with a business transfer or acquisition</li>
+                      <li>IP addresses for basic security</li>
+                      <li>Browser type and version</li>
+                      <li>Access timestamps</li>
+                    </ul>
+                    <p>These logs are used solely for technical maintenance and are not analyzed for personal data.</p>
+                  </div>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold text-white mb-4">5. Hobby Project Nature</h2>
+                  <div className="text-white/80 space-y-4">
+                    <p>Important to understand:</p>
+                    <ul className="list-disc list-inside space-y-2 ml-4">
+                      <li>This is a personal hobby project, not a commercial service</li>
+                      <li>No personal data is collected for any purpose</li>
+                      <li>No user accounts or profiles are created</li>
+                      <li>No marketing or commercial use of any information</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">4. Data Security</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">6. Your Control</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>We implement appropriate security measures to protect your information:</p>
+                    <p>You maintain full control:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Encrypted data transmission and storage</li>
-                      <li>Regular security audits and monitoring</li>
-                      <li>Access controls and authentication measures</li>
-                      <li>Secure database configurations and backups</li>
+                      <li>Clear your browser's local storage at any time</li>
+                      <li>Use incognito/private browsing mode</li>
+                      <li>No account deletion needed (no accounts exist)</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">5. Data Retention</h2>
-                  <div className="text-white/80 space-y-4">
-                    <p>We retain your information for as long as necessary to:</p>
-                    <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Provide our services effectively</li>
-                      <li>Comply with legal obligations</li>
-                      <li>Resolve disputes and enforce agreements</li>
-                      <li>Maintain security and prevent abuse</li>
-                    </ul>
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">6. Your Rights</h2>
-                  <div className="text-white/80 space-y-4">
-                    <p>You have the right to:</p>
-                    <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Request access to your personal information</li>
-                      <li>Request correction of inaccurate data</li>
-                      <li>Request deletion of your information</li>
-                      <li>Object to processing of your information</li>
-                      <li>Request data portability</li>
-                    </ul>
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">7. Cookies and Tracking</h2>
-                  <div className="text-white/80 space-y-4">
-                    <p>We use session storage and local storage for:</p>
-                    <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Maintaining your login session</li>
-                      <li>Storing invite code validation status</li>
-                      <li>Remembering your preferences</li>
-                      <li>Enhancing platform functionality</li>
-                    </ul>
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">8. Changes to This Policy</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">7. Changes to This Policy</h2>
                   <div className="text-white/80">
-                    <p>We may update this privacy policy from time to time. We will notify you of any material changes by posting the new policy on this page and updating the "Last updated" date.</p>
+                    <p>Any changes to this privacy policy will be posted on this page. Given the hobby nature of this project and the lack of data collection, changes are unlikely but will be clearly communicated if they occur.</p>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">9. Contact Us</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">8. Questions</h2>
                   <div className="text-white/80">
-                    <p>If you have any questions about this Privacy Policy, please contact us through our platform or reach out to our support team.</p>
+                    <p>If you have any questions about this privacy policy or the hobby project, you can reach out through the platform's contact methods.</p>
                   </div>
                 </section>
               </div>

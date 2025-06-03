@@ -49,145 +49,125 @@ export default function TermsPage() {
                 </div>
                 <h1 className="text-4xl font-bold text-white mb-4">Terms of Service</h1>
                 <p className="text-white/70 text-lg">Last updated: {new Date().toLocaleDateString()}</p>
+                <div className="mt-4 p-4 bg-blue-500/20 rounded-xl border border-blue-400/30">
+                  <p className="text-blue-100 font-medium">Simple terms for a hobby project - use responsibly and have fun!</p>
+                </div>
               </div>
 
               {/* Content */}
               <div className="prose prose-invert max-w-none space-y-8">
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">1. Acceptance of Terms</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">1. About This Hobby Project</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>By accessing and using the MLVS District platform, you accept and agree to be bound by the terms and provision of this agreement.</p>
-                    <p>If you do not agree to abide by the above, please do not use this service.</p>
+                    <p>This is a personal hobby project created for educational and demonstration purposes. By accessing this website, you acknowledge that:</p>
+                    <ul className="list-disc list-inside space-y-2 ml-4">
+                      <li>This is not a commercial service or business</li>
+                      <li>No warranties or guarantees are provided</li>
+                      <li>The site may be modified or discontinued at any time</li>
+                      <li>Use is entirely at your own discretion</li>
+                    </ul>
                   </div>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold text-white mb-4">2. Invite-Only Access</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>Access to MLVS District is strictly by invitation only:</p>
+                    <p>Access requires a valid invite code:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Valid invite codes are required for platform access</li>
-                      <li>Invite codes are single-use and cannot be shared or transferred</li>
-                      <li>Unauthorized attempts to access the platform are prohibited</li>
-                      <li>We reserve the right to revoke access at any time</li>
+                      <li>Invite codes are for personal use only</li>
+                      <li>Please don't share codes publicly</li>
+                      <li>Codes may expire or be limited in number</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">3. User Conduct</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">3. Basic Usage Guidelines</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>By using our platform, you agree to:</p>
+                    <p>Please use the site responsibly:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Use the service for lawful purposes only</li>
-                      <li>Not attempt to circumvent security measures</li>
-                      <li>Not engage in any activity that disrupts the service</li>
-                      <li>Not reverse engineer or attempt to extract source code</li>
-                      <li>Respect the intellectual property rights of others</li>
-                      <li>Maintain the confidentiality of your access credentials</li>
+                      <li>Don't attempt to break or exploit the website</li>
+                      <li>Don't use automated tools to spam requests</li>
+                      <li>Respect the educational nature of this project</li>
+                      <li>Be considerate of others who may visit</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">4. Intellectual Property</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">4. No Data Collection</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>The MLVS District platform and its content are protected by intellectual property laws:</p>
+                    <p>As stated in our Privacy Policy:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>All content, features, and functionality are owned by MLVS District</li>
-                      <li>You may not copy, modify, or distribute any part of the platform</li>
-                      <li>Trademarks, logos, and service marks are property of their respective owners</li>
-                      <li>User-generated content remains your property but grants us usage rights</li>
+                      <li>We don't collect personal information</li>
+                      <li>No user accounts or profiles are created</li>
+                      <li>Only basic invite code validation is processed</li>
+                      <li>Your privacy is fully respected</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">5. Privacy and Data Protection</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">5. Educational Purpose</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>Your privacy is important to us:</p>
+                    <p>This project demonstrates:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>We collect and process data as outlined in our Privacy Policy</li>
-                      <li>We implement security measures to protect your information</li>
-                      <li>We do not sell or share personal data with unauthorized parties</li>
-                      <li>You have rights regarding your personal data as described in our Privacy Policy</li>
+                      <li>Modern web development techniques</li>
+                      <li>Invite-only access systems</li>
+                      <li>Responsive design principles</li>
+                      <li>Privacy-focused development</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">6. Service Availability</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">6. No Warranties</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>We strive to maintain service availability but cannot guarantee:</p>
+                    <p>As a hobby project:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>Uninterrupted access to the platform</li>
-                      <li>Error-free operation at all times</li>
-                      <li>Compatibility with all devices or browsers</li>
-                      <li>Availability during maintenance periods</li>
+                      <li>The site is provided "as is"</li>
+                      <li>No guarantees of availability or functionality</li>
+                      <li>May contain bugs or experimental features</li>
+                      <li>No support or maintenance promises</li>
                     </ul>
-                    <p>We reserve the right to modify, suspend, or discontinue the service with or without notice.</p>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">7. Limitation of Liability</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">7. Intellectual Property</h2>
                   <div className="text-white/80 space-y-4">
-                    <p>To the fullest extent permitted by law:</p>
+                    <p>The code and design are part of a learning project:</p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>MLVS District shall not be liable for any indirect, incidental, or consequential damages</li>
-                      <li>Our total liability shall not exceed the amount paid by you for the service</li>
-                      <li>We are not responsible for third-party content or services</li>
-                      <li>You use the service at your own risk</li>
+                      <li>Created for educational purposes</li>
+                      <li>May reference open-source components</li>
+                      <li>Not intended for commercial reproduction</li>
                     </ul>
                   </div>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">8. Indemnification</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-4">8. Limitation of Liability</h2>
+                  <div className="text-white/80 space-y-4">
+                    <p>Since this is a non-commercial hobby project, there is no liability for:</p>
+                    <ul className="list-disc list-inside space-y-2 ml-4">
+                      <li>Site downtime or technical issues</li>
+                      <li>Any inconvenience caused by bugs</li>
+                      <li>Changes or discontinuation of the project</li>
+                    </ul>
+                  </div>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold text-white mb-4">9. Changes</h2>
+                  <div className="text-white/80 space-y-4">
+                    <p>These terms may be updated as the hobby project evolves. Any changes will be posted here. Continued use means you accept any updates.</p>
+                  </div>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold text-white mb-4">10. Questions</h2>
                   <div className="text-white/80">
-                    <p>You agree to indemnify and hold harmless MLVS District from any claims, damages, or expenses arising from your use of the platform, violation of these terms, or infringement of any rights of another party.</p>
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">9. Termination</h2>
-                  <div className="text-white/80 space-y-4">
-                    <p>We may terminate or suspend your access immediately:</p>
-                    <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>For violation of these terms</li>
-                      <li>For suspected fraudulent or illegal activity</li>
-                      <li>At our sole discretion with or without cause</li>
-                      <li>If required by law or legal authority</li>
-                    </ul>
-                    <p>Upon termination, your right to use the service ceases immediately.</p>
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">10. Governing Law</h2>
-                  <div className="text-white/80">
-                    <p>These terms shall be governed by and construed in accordance with applicable laws. Any disputes arising from these terms or use of the service shall be subject to the exclusive jurisdiction of competent courts.</p>
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">11. Changes to Terms</h2>
-                  <div className="text-white/80">
-                    <p>We reserve the right to modify these terms at any time. Material changes will be communicated through the platform or by email. Continued use after changes constitutes acceptance of the new terms.</p>
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">12. Contact Information</h2>
-                  <div className="text-white/80">
-                    <p>For questions about these Terms of Service, please contact us through our platform support system or reach out to our legal team for formal inquiries.</p>
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold text-white mb-4">13. Severability</h2>
-                  <div className="text-white/80">
-                    <p>If any provision of these terms is found to be unenforceable or invalid, the remaining provisions will continue to be valid and enforceable to the fullest extent permitted by law.</p>
+                    <p>If you have questions about this hobby project or these terms, feel free to reach out through available contact methods.</p>
                   </div>
                 </section>
               </div>
