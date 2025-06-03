@@ -21,4 +21,4 @@ if (fs.existsSync(distPath)) {
 }
 
 // Start the server
-import('./dist/index.js').catch(console.error);
+import('./dist/server.js').catch(console.error);

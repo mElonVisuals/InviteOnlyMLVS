@@ -13,8 +13,11 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the frontend only
 RUN npm run build
+
+# Build the production server without vite dependencies
+RUN npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/server.js
 
 # Create public directory and copy built files
 RUN mkdir -p public && cp -r dist/public/* ./public/ 2>/dev/null || cp -r dist/* ./public/ 2>/dev/null || true
