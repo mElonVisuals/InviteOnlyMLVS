@@ -1,0 +1,125 @@
+Coolify
+v4.0.0-beta.418
+
+Current Team
+
+Root Team
+Dashboard
+Projects
+Servers
+Sources
+Destinations
+S3 Storages
+Shared Variables
+Notifications
+Keys & Tokens
+Tags
+Terminal
+Profile
+Teams
+Settings
+Onboarding
+Sponsor us
+Feedback
+Logout
+Logs
+MLVS District
+production
+m-elon-visuals/-invite-only-m-l-v-s:main-jo08c8oc4c4ookw04oc8kgw0
+Restarting
+(unhealthy)
+
+Configuration
+Deployments
+Logs
+Terminal
+
+Links
+
+Advanced
+Redeploy
+Restart
+Stop
+Here you can see the logs of the application.
+Server: localhost
+dcwkgko8swgcgcsowwswggok-221119814671
+Only Show Number of Lines
+*
+8000
+Refresh
+Stream Logs
+Include Timestamps
+
+2025-06-03T22:11:44.180196057Z npm warn exec The following package was not found and will be installed: tsx@4.19.4
+2025-06-03T22:11:46.336202907Z /app/server/production-complete.ts:379
+2025-06-03T22:11:46.336243171Z if (require.main === module) {
+2025-06-03T22:11:46.336247229Z ^
+2025-06-03T22:11:46.336250435Z 
+2025-06-03T22:11:46.336253581Z 
+2025-06-03T22:11:46.336256937Z ReferenceError: require is not defined in ES module scope, you can use import instead
+2025-06-03T22:11:46.336260283Z     at <anonymous> (/app/server/production-complete.ts:379:1)
+2025-06-03T22:11:46.336264340Z     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+2025-06-03T22:11:46.336267756Z     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+2025-06-03T22:11:46.336271073Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2025-06-03T22:11:46.336274369Z 
+2025-06-03T22:11:46.336277404Z Node.js v20.19.2
+2025-06-03T22:11:49.030710549Z /app/server/production-complete.ts:379
+2025-06-03T22:11:49.030775450Z if (require.main === module) {
+2025-06-03T22:11:49.030780628Z ^
+2025-06-03T22:11:49.030784806Z 
+2025-06-03T22:11:49.030788683Z 
+2025-06-03T22:11:49.030792771Z ReferenceError: require is not defined in ES module scope, you can use import instead
+2025-06-03T22:11:49.030797400Z     at <anonymous> (/app/server/production-complete.ts:379:1)
+2025-06-03T22:11:49.030801818Z     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+2025-06-03T22:11:49.030805926Z     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+2025-06-03T22:11:49.030809993Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2025-06-03T22:11:49.030814121Z 
+2025-06-03T22:11:49.030817798Z Node.js v20.19.2
+2025-06-03T22:11:51.721269416Z /app/server/production-complete.ts:379
+2025-06-03T22:11:51.721322935Z if (require.main === module) {
+2025-06-03T22:11:51.721330309Z ^
+2025-06-03T22:11:51.721335980Z 
+2025-06-03T22:11:51.721342171Z 
+2025-06-03T22:11:51.721347420Z ReferenceError: require is not defined in ES module scope, you can use import instead
+2025-06-03T22:11:51.721353301Z     at <anonymous> (/app/server/production-complete.ts:379:1)
+2025-06-03T22:11:51.721359072Z     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+2025-06-03T22:11:51.721364783Z     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+2025-06-03T22:11:51.721370373Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2025-06-03T22:11:51.721375823Z 
+2025-06-03T22:11:51.721381394Z Node.js v20.19.2
+2025-06-03T22:11:54.520334030Z /app/server/production-complete.ts:379
+2025-06-03T22:11:54.520401957Z if (require.main === module) {
+2025-06-03T22:11:54.520406634Z ^
+2025-06-03T22:11:54.520409870Z 
+2025-06-03T22:11:54.520413217Z 
+2025-06-03T22:11:54.520416463Z ReferenceError: require is not defined in ES module scope, you can use import instead
+2025-06-03T22:11:54.520419789Z     at <anonymous> (/app/server/production-complete.ts:379:1)
+2025-06-03T22:11:54.520423526Z     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+2025-06-03T22:11:54.520426993Z     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+2025-06-03T22:11:54.520430389Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2025-06-03T22:11:54.520433936Z 
+2025-06-03T22:11:54.520437132Z Node.js v20.19.2
+2025-06-03T22:11:57.815898119Z /app/server/production-complete.ts:379
+2025-06-03T22:11:57.815952520Z if (require.main === module) {
+2025-06-03T22:11:57.815958792Z ^
+2025-06-03T22:11:57.815964632Z 
+2025-06-03T22:11:57.815969522Z 
+2025-06-03T22:11:57.815977175Z ReferenceError: require is not defined in ES module scope, you can use import instead
+2025-06-03T22:11:57.815982094Z     at <anonymous> (/app/server/production-complete.ts:379:1)
+2025-06-03T22:11:57.815987695Z     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+2025-06-03T22:11:57.815992844Z     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+2025-06-03T22:11:57.816010287Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2025-06-03T22:11:57.816015387Z 
+2025-06-03T22:11:57.816020555Z Node.js v20.19.2
+2025-06-03T22:12:02.618299610Z /app/server/production-complete.ts:379
+2025-06-03T22:12:02.618352017Z if (require.main === module) {
+2025-06-03T22:12:02.618358259Z ^
+2025-06-03T22:12:02.618363478Z 
+2025-06-03T22:12:02.618368758Z 
+2025-06-03T22:12:02.618373827Z ReferenceError: require is not defined in ES module scope, you can use import instead
+2025-06-03T22:12:02.618379257Z     at <anonymous> (/app/server/production-complete.ts:379:1)
+2025-06-03T22:12:02.618384978Z     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+2025-06-03T22:12:02.618390258Z     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+2025-06-03T22:12:02.618395378Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2025-06-03T22:12:02.618400567Z 
+2025-06-03T22:12:02.618405647Z Node.js v20.19.2
