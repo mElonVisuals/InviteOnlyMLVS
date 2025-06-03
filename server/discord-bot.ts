@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, Collection } from 'discord.js';
+import { Client, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { pool } from './db';
 
 let client: Client | null = null;
@@ -109,7 +109,7 @@ async function registerCommands(): Promise<void> {
 
 // Check if user is admin
 function isAdmin(member: any): boolean {
-  return member.permissions.has('ADMINISTRATOR') || member.permissions.has('MANAGE_GUILD');
+  return member.permissions.has(PermissionFlagsBits.Administrator) || member.permissions.has(PermissionFlagsBits.ManageGuild);
 }
 
 // Check if channel is verify channel
@@ -278,18 +278,23 @@ async function handleCodeStats(interaction: any): Promise<void> {
 }
 
 export async function startDiscordBot(): Promise<void> {
+  console.log('🤖 Attempting to start Discord bot...');
+  
   // Check for required environment variables
   if (!process.env.DISCORD_BOT_TOKEN) {
-    console.log('DISCORD_BOT_TOKEN not found - Discord bot will not start');
+    console.log('❌ DISCORD_BOT_TOKEN not found - Discord bot will not start');
     return;
   }
 
   if (!process.env.DATABASE_URL) {
-    console.log('DATABASE_URL not found - Discord bot will not start');
+    console.log('❌ DATABASE_URL not found - Discord bot will not start');
     return;
   }
 
+  console.log('✓ Environment variables found for Discord bot');
+
   try {
+    console.log('📊 Creating Discord requests table...');
     // Create Discord requests table if it doesn't exist
     await pool.query(`
       CREATE TABLE IF NOT EXISTS discord_requests (
@@ -299,7 +304,9 @@ export async function startDiscordBot(): Promise<void> {
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    console.log('✓ Discord requests table ready');
 
+    console.log('🔧 Creating Discord client...');
     client = new Client({
       intents: [
         GatewayIntentBits.Guilds,
@@ -309,12 +316,25 @@ export async function startDiscordBot(): Promise<void> {
     });
 
     client.once('ready', async () => {
-      console.log(`✅ Discord bot logged in as ${client?.user?.tag}`);
+      console.log(`✅ Discord bot successfully logged in as ${client?.user?.tag}`);
+      console.log(`🏠 Connected to ${client?.guilds.cache.size} guild(s)`);
+      
+      if (process.env.DISCORD_GUILD_ID && client) {
+        const guild = client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
+        if (guild) {
+          console.log(`✓ Found target guild: ${guild.name}`);
+        } else {
+          console.log(`⚠️ Guild ID ${process.env.DISCORD_GUILD_ID} not found in bot's guilds`);
+        }
+      }
+      
       await registerCommands();
     });
 
     client.on('interactionCreate', async (interaction) => {
       if (!interaction.isChatInputCommand()) return;
+
+      console.log(`📝 Received command: ${interaction.commandName} from ${interaction.user.tag}`);
 
       switch (interaction.commandName) {
         case 'request-access':
@@ -330,14 +350,26 @@ export async function startDiscordBot(): Promise<void> {
     });
 
     client.on('error', (error) => {
-      console.error('Discord bot error:', error);
+      console.error('❌ Discord bot runtime error:', error);
     });
 
+    client.on('warn', (warning) => {
+      console.warn('⚠️ Discord bot warning:', warning);
+    });
+
+    client.on('disconnect', () => {
+      console.log('🔌 Discord bot disconnected');
+    });
+
+    console.log('🔐 Attempting to login to Discord...');
     await client.login(process.env.DISCORD_BOT_TOKEN);
-    console.log('🤖 Discord bot starting...');
 
   } catch (error) {
-    console.error('Failed to start Discord bot:', error);
+    console.error('❌ Failed to start Discord bot:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+      console.error('Stack trace:', error.stack);
+    }
   }
 }
 

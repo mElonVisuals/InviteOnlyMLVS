@@ -85,6 +85,7 @@ async function initializeDatabase() {
   // Start Discord bot alongside the web server
   startDiscordBot().catch(error => {
     log(`Discord bot startup failed: ${error.message}`);
+    log(`Discord bot error details: ${error.stack || 'No stack trace available'}`);
   });
   
   const server = await registerRoutes(app);
