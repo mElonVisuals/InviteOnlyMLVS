@@ -31,5 +31,5 @@ EXPOSE 5000
 # Set NODE_ENV to production
 ENV NODE_ENV=production
 
-# Start the application with the complete production server
-CMD ["node", "start-production-coolify.js"]
+# Start the application directly with the production server
+CMD ["npx", "tsx", "server/production-complete.ts"]
