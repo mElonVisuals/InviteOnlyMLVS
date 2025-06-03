@@ -345,7 +345,7 @@ export default function InvitePage() {
               <span className="text-white/30">•</span>
               <a href="#" className="hover:text-white/70 transition-colors duration-300">Terms</a>
               <span className="text-white/30">•</span>
-              <span>© 2024 All rights reserved</span>
+              <span>© 2025 All rights reserved</span>
             </div>
           </div>
         </div>
