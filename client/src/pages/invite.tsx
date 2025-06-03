@@ -8,7 +8,7 @@ import { KeyIcon, TicketIcon, ArrowRightIcon, CheckCircleIcon, XCircleIcon, Load
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import mlvsLogo from "@assets/mlvs_district (2).png";
+import mlvsLogo from "@assets/mlvs_district (1) (1).png";
 
 interface ValidateInviteResponse {
   success: boolean;
