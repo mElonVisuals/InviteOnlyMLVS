@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { pool } from "./db";
 
 const app = express();
 app.use(express.json());
@@ -36,7 +37,47 @@ app.use((req, res, next) => {
   next();
 });
 
+async function initializeDatabase() {
+  try {
+    log('Initializing database tables...');
+    
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS invite_codes (
+        id SERIAL PRIMARY KEY,
+        code VARCHAR(50) UNIQUE NOT NULL,
+        used BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id SERIAL PRIMARY KEY,
+        access_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    const initialCodes = ['ALPHA-2024', 'BETA-ACCESS', 'EARLY-BIRD', 'VIP-MEMBER', 'DEMO-CODE'];
+    
+    for (const code of initialCodes) {
+      await pool.query(`
+        INSERT INTO invite_codes (code) 
+        VALUES ($1) 
+        ON CONFLICT (code) DO NOTHING;
+      `, [code]);
+    }
+
+    log('Database initialization complete');
+    
+  } catch (error) {
+    log(`Database initialization error: ${error}`);
+    throw error;
+  }
+}
+
 (async () => {
+  await initializeDatabase();
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
