@@ -19,7 +19,7 @@ function log(message: string, source = "express") {
 
 // Serve static files in production
 function serveStatic(app: express.Express) {
-  const distPath = path.resolve(process.cwd(), "client/dist");
+  const distPath = path.resolve(process.cwd(), "dist/public");
   app.use(sirv(distPath, { 
     single: true,
     dev: false,
