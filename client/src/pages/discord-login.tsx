@@ -2,88 +2,40 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { 
-  ShieldIcon,
-  UserIcon,
-  ArrowRightIcon,
-  ArrowLeftIcon
-} from "lucide-react";
+import { ArrowRightIcon, ArrowLeftIcon } from "lucide-react";
+import { FaDiscord } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
-import mlvsLogo from "@assets/mlvs_district (1) (1).png";
 
 export default function DiscordLoginPage() {
   const [, setLocation] = useLocation();
-  const [discordUsername, setDiscordUsername] = useState("");
-  const [discordUserId, setDiscordUserId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleDiscordLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleDiscordOAuth = () => {
+    setIsLoading(true);
     
-    if (!discordUsername.trim() || !discordUserId.trim()) {
+    // Redirect to Discord OAuth2 authorization
+    const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
+    const redirectUri = encodeURIComponent(`${window.location.origin}/api/discord/callback`);
+    const scope = encodeURIComponent('identify');
+    
+    if (!clientId) {
       toast({
-        title: "Missing Information",
-        description: "Please enter both your Discord username and user ID.",
+        title: "Configuration Error",
+        description: "Discord OAuth2 is not properly configured.",
         variant: "destructive",
       });
+      setIsLoading(false);
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/discord-login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          discordUserId: discordUserId.trim(),
-          discordUsername: discordUsername.trim()
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Store session data
-        const sessionData = {
-          sessionId: data.session.id,
-          accessTime: data.session.accessTime,
-          inviteCode: 'RETURNING_USER',
-          discordUsername: data.session.discordUsername,
-          discordUserId: discordUserId.trim(),
-          userAgent: navigator.userAgent,
-          usedAt: new Date().toISOString()
-        };
-
-        localStorage.setItem('sessionData', JSON.stringify(sessionData));
-        
-        toast({
-          title: "Welcome Back!",
-          description: "Successfully logged in with Discord.",
-        });
-
-        setLocation('/welcome');
-      } else {
-        toast({
-          title: "Login Failed",
-          description: data.message || "No previous access found. Please request a new invite code.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error('Discord login error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to authenticate with Discord. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+    
+    // Store the current URL to redirect back after authentication
+    localStorage.setItem('auth_redirect', '/dashboard');
+    
+    // Redirect to Discord OAuth2
+    window.location.href = discordAuthUrl;
   };
 
   return (
@@ -91,77 +43,41 @@ export default function DiscordLoginPage() {
       <Card className="w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl">
         <CardHeader className="text-center space-y-4">
           <div className="mx-auto">
-            <img 
-              src={mlvsLogo} 
-              alt="MLVS District Logo" 
-              className="w-16 h-16 mx-auto mb-4 rounded-xl shadow-lg"
-            />
+            <div className="w-16 h-16 mx-auto mb-4 bg-indigo-600 rounded-xl shadow-lg flex items-center justify-center">
+              <FaDiscord className="w-10 h-10 text-white" />
+            </div>
           </div>
           <div>
             <CardTitle className="text-2xl font-bold text-white mb-2">
-              Discord Login
+              Discord Authentication
             </CardTitle>
             <p className="text-white/60">
-              Sign in with your Discord credentials if you've previously accessed the system
+              Continue with Discord OAuth2 to access the system
             </p>
           </div>
         </CardHeader>
         
         <CardContent className="space-y-6">
-          <form onSubmit={handleDiscordLogin} className="space-y-4">
-            <div>
-              <Label htmlFor="discordUsername" className="text-white/80">Discord Username</Label>
-              <div className="relative">
-                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
-                <Input
-                  id="discordUsername"
-                  type="text"
-                  placeholder="Enter your Discord username"
-                  value={discordUsername}
-                  onChange={(e) => setDiscordUsername(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white placeholder-white/40 pl-10"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="discordUserId" className="text-white/80">Discord User ID</Label>
-              <div className="relative">
-                <ShieldIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
-                <Input
-                  id="discordUserId"
-                  type="text"
-                  placeholder="Enter your Discord user ID"
-                  value={discordUserId}
-                  onChange={(e) => setDiscordUserId(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white placeholder-white/40 pl-10"
-                  required
-                />
-              </div>
-              <p className="text-white/50 text-xs mt-1">
-                Right-click your profile in Discord and select "Copy User ID"
-              </p>
-            </div>
-
+          <div className="space-y-4">
             <Button
-              type="submit"
+              onClick={handleDiscordOAuth}
               disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 text-lg"
             >
               {isLoading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
-                  Authenticating...
+                  <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin mr-3" />
+                  Redirecting to Discord...
                 </>
               ) : (
                 <>
-                  Sign In with Discord
+                  <FaDiscord className="w-5 h-5 mr-3" />
+                  Continue with Discord
                   <ArrowRightIcon className="w-4 h-4 ml-2" />
                 </>
               )}
             </Button>
-          </form>
+          </div>
 
           <div className="text-center space-y-3">
             <div className="relative">

@@ -139,51 +139,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Discord login for returning users
-  app.post("/api/discord-login", async (req, res) => {
+  // Discord OAuth2 callback handler
+  app.get("/api/discord/callback", async (req, res) => {
     try {
-      const { discordUserId, discordUsername } = req.body;
-
-      if (!discordUserId || !discordUsername) {
-        return res.status(400).json({
-          success: false,
-          message: "Discord user ID and username are required"
-        });
+      const { code } = req.query;
+      
+      if (!code) {
+        return res.redirect('/?error=missing_code');
       }
 
+      const clientId = process.env.VITE_DISCORD_CLIENT_ID;
+      const clientSecret = process.env.DISCORD_CLIENT_SECRET;
+      const redirectUri = `${req.protocol}://${req.get('host')}/api/discord/callback`;
+
+      if (!clientId || !clientSecret) {
+        return res.redirect('/?error=oauth_not_configured');
+      }
+
+      // Exchange code for access token
+      const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          client_id: clientId,
+          client_secret: clientSecret,
+          grant_type: 'authorization_code',
+          code: code as string,
+          redirect_uri: redirectUri,
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        return res.redirect('/?error=token_exchange_failed');
+      }
+
+      const tokenData = await tokenResponse.json();
+      
+      // Get user information from Discord
+      const userResponse = await fetch('https://discord.com/api/users/@me', {
+        headers: {
+          Authorization: `Bearer ${tokenData.access_token}`,
+        },
+      });
+
+      if (!userResponse.ok) {
+        return res.redirect('/?error=user_fetch_failed');
+      }
+
+      const userData = await userResponse.json();
+      
       // Check if user exists in persistent_users table
-      const existingUser = await storage.getUserByDiscord(discordUserId);
+      const existingUser = await storage.getUserByDiscord(userData.id);
       
       if (!existingUser) {
-        return res.status(400).json({
-          success: false,
-          message: "No previous access found. Please request a new invite code."
-        });
+        return res.redirect('/?error=no_previous_access');
       }
 
       // Create new session for returning user
       const session = await storage.createSession({
-        inviteCodeId: undefined, // Special case for Discord login
+        inviteCodeId: undefined,
         userAgent: req.headers['user-agent'] || null,
-        discordUserId: discordUserId,
-        discordUsername: discordUsername
+        discordUserId: userData.id,
+        discordUsername: userData.username
       });
 
-      res.json({
-        success: true,
-        message: "Successfully authenticated with Discord",
-        session: {
-          id: session.id,
-          accessTime: session.accessTime,
-          discordUsername: discordUsername
-        }
-      });
+      // Set session cookie or redirect with session data
+      req.session = req.session || {};
+      req.session.userId = session.id;
+      req.session.discordId = userData.id;
+      req.session.discordUsername = userData.username;
+
+      // Redirect to dashboard with success
+      res.redirect('/dashboard?auth=success');
     } catch (error) {
-      console.error("Discord login error:", error);
-      res.status(500).json({
-        success: false,
-        message: "Internal server error during Discord authentication"
-      });
+      console.error("Discord OAuth callback error:", error);
+      res.redirect('/?error=oauth_failed');
     }
   });
 
