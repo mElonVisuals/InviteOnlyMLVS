@@ -120,7 +120,7 @@ export default function InvitePage() {
           {/* Header Section */}
           <div className="text-center mb-10 relative">
             {/* Logo positioned absolutely to not affect layout */}
-            <div className="absolute inset-x-0 -top-20 flex items-center justify-center z-0 pointer-events-none">
+            <div className="absolute inset-x-0 -top-8 flex items-center justify-center z-0 pointer-events-none">
               <img 
                 src={mlvsLogo} 
                 alt="MLVS District" 
