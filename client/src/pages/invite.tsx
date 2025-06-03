@@ -169,14 +169,7 @@ export default function InvitePage() {
       <div className="flex-1 flex items-center justify-center p-4 relative z-10">
         <div className="w-full max-w-md animate-fade-in">
           
-          {/* Logo positioned above everything */}
-          <div className="absolute inset-x-0 -top-24 flex items-center justify-center z-0 pointer-events-none">
-            <img 
-              src={mlvsLogo} 
-              alt="MLVS District" 
-              className="w-80 opacity-90 filter drop-shadow-lg"
-            />
-          </div>
+
 
           {/* Header Section */}
           <div className="text-center mb-12 relative">
