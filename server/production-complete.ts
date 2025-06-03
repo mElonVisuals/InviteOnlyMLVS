@@ -74,6 +74,15 @@ async function initializeDatabase() {
     `);
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS discord_requests (
+        id SERIAL PRIMARY KEY,
+        discord_user_id TEXT NOT NULL,
+        invite_code TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS reports (
         id SERIAL PRIMARY KEY,
         discord_user_id TEXT NOT NULL,
