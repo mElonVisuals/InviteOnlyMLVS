@@ -10,6 +10,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
   });
 
+  // Test Discord bot configuration
+  app.get("/api/test-discord", async (req, res) => {
+    try {
+      const botToken = process.env.DISCORD_BOT_TOKEN;
+      const guildId = process.env.DISCORD_GUILD_ID;
+      
+      if (!botToken || !guildId) {
+        return res.json({ 
+          success: false, 
+          message: "Environment variables missing",
+          config: { hasBotToken: !!botToken, hasGuildId: !!guildId }
+        });
+      }
+
+      // Test bot connection
+      const testResponse = await fetch(`https://discord.com/api/v10/guilds/${guildId}`, {
+        headers: {
+          'Authorization': `Bot ${botToken}`,
+        }
+      });
+
+      if (!testResponse.ok) {
+        const error = await testResponse.text();
+        return res.json({
+          success: false,
+          message: `Bot cannot access server. Status: ${testResponse.status}`,
+          error: error
+        });
+      }
+
+      const guildData = await testResponse.json();
+      res.json({
+        success: true,
+        message: "Bot configuration is working",
+        guild: { name: guildData.name, id: guildData.id }
+      });
+    } catch (error) {
+      res.json({
+        success: false,
+        message: "Test failed",
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
   // Request Discord invite
   app.post("/api/request-invite", async (req, res) => {
     try {
