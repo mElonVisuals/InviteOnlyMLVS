@@ -10,7 +10,7 @@ import {
   FileTextIcon,
   ShieldIcon,
   LogOutIcon,
-  BellIcon,
+  RefreshCwIcon,
   SearchIcon,
   MenuIcon,
   XIcon,
@@ -39,6 +39,13 @@ interface DashboardStats {
   activeConnections: number;
   systemUptime: string;
   dataTransfer: string;
+  discordUsers: number;
+  recentActivity: Array<{
+    timestamp: string;
+    action: string;
+    user: string;
+    details: string;
+  }>;
 }
 
 export default function DashboardPage() {
@@ -273,17 +280,13 @@ export default function DashboardPage() {
                 </div>
                 <div className="relative">
                   <Button
-                    onClick={() => setNotificationsOpen(!notificationsOpen)}
+                    onClick={fetchDashboardData}
                     className="bg-white/10 hover:bg-white/20 text-white border border-white/20 relative"
                     variant="outline"
                     size="sm"
+                    title="Refresh real-time data"
                   >
-                    <BellIcon className="w-4 h-4" />
-                    {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">
-                        {unreadCount}
-                      </span>
-                    )}
+                    <RefreshCwIcon className="w-4 h-4" />
                   </Button>
 
                   {/* Notifications Dropdown */}
