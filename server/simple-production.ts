@@ -88,8 +88,8 @@ async function startDiscordBot() {
           );
 
           await pool.query(
-            'INSERT INTO discord_requests (discord_user_id, invite_code) VALUES ($1, $2) ON CONFLICT (discord_user_id) DO UPDATE SET invite_code = $2, created_at = NOW()',
-            [interaction.user.id, code]
+            'INSERT INTO discord_requests (discord_user_id) VALUES ($1) ON CONFLICT (discord_user_id) DO UPDATE SET created_at = NOW()',
+            [interaction.user.id]
           );
 
           // Send response
