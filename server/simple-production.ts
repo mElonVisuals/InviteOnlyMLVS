@@ -25,12 +25,16 @@ async function startDiscordBot() {
   log('Discord bot: Starting initialization...');
 
   try {
-    // Create Discord requests table
+    // Ensure database schema is up to date
+    await pool.query(`
+      ALTER TABLE invite_codes ADD COLUMN IF NOT EXISTS discord_user_id TEXT;
+      ALTER TABLE invite_codes ADD COLUMN IF NOT EXISTS discord_username TEXT;
+    `);
+    
     await pool.query(`
       CREATE TABLE IF NOT EXISTS discord_requests (
         id SERIAL PRIMARY KEY,
         discord_user_id TEXT UNIQUE NOT NULL,
-        invite_code TEXT NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);

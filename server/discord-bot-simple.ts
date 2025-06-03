@@ -151,11 +151,11 @@ async function codeExists(code: string): Promise<boolean> {
   }
 }
 
-async function insertInviteCode(code: string): Promise<boolean> {
+async function insertInviteCode(code: string, discordUserId?: string, discordUsername?: string): Promise<boolean> {
   try {
     await pool.query(
-      'INSERT INTO invite_codes (code, is_used) VALUES ($1, $2)',
-      [code, 'false']
+      'INSERT INTO invite_codes (code, is_used, discord_user_id, discord_username) VALUES ($1, $2, $3, $4)',
+      [code, 'false', discordUserId || null, discordUsername || null]
     );
     return true;
   } catch (error) {
@@ -224,15 +224,14 @@ async function handleRequestAccess(interaction: any, EmbedBuilder: any): Promise
   }
 
   const code = await generateUniqueCode();
-  await insertInviteCode(code);
+  await insertInviteCode(code, interaction.user.id, interaction.user.username);
 
   await pool.query(`
-    INSERT INTO discord_requests (discord_user_id, invite_code, created_at)
-    VALUES ($1, $2, NOW())
+    INSERT INTO discord_requests (discord_user_id, created_at)
+    VALUES ($1, NOW())
     ON CONFLICT (discord_user_id) DO UPDATE SET
-      invite_code = $2,
       created_at = NOW()
-  `, [interaction.user.id, code]);
+  `, [interaction.user.id]);
 
   try {
     const dmEmbed = new EmbedBuilder()
