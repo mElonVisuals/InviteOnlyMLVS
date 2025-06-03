@@ -119,16 +119,13 @@ export default function InvitePage() {
           
           {/* Header Section */}
           <div className="text-center mb-10">
-            <div className="mx-auto w-40 h-20 mb-8">
+            <div className="mx-auto w-64 h-32 mb-8 flex items-center justify-center">
               <img 
                 src={mlvsLogo} 
                 alt="MLVS District" 
-                className="w-full h-full object-contain"
+                className="max-w-full max-h-full object-contain"
               />
             </div>
-            <h1 className="text-5xl font-bold text-white mb-4 tracking-tight animate-slide-up font-mono">
-              MLVS DISTRICT
-            </h1>
             <div className="flex items-center justify-center space-x-2 mb-4 animate-slide-up" style={{animationDelay: '0.2s'}}>
               <ShieldCheckIcon className="text-blue-400 w-6 h-6 animate-pulse" />
               <span className="text-blue-400 font-medium text-lg">Secure Access Portal</span>
