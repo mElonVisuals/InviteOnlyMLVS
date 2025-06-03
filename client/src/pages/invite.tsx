@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { KeyIcon, TicketIcon, ArrowRightIcon, CheckCircleIcon, XCircleIcon, Loader2Icon, ShieldCheckIcon } from "lucide-react";
+import { KeyIcon, TicketIcon, ArrowRightIcon, CheckCircleIcon, XCircleIcon, Loader2Icon, ShieldCheckIcon, Volume2Icon, VolumeXIcon, PlayIcon, PauseIcon } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -26,7 +26,39 @@ export default function InvitePage() {
     type: 'success' | 'error';
     message: string;
   } | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const { toast } = useToast();
+
+  // Background music functionality
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = 0.3;
+      audio.loop = true;
+    }
+  }, []);
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (audio) {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play().catch(e => console.log('Audio play failed:', e));
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const toggleMute = () => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   const validateInviteMutation = useMutation({
     mutationFn: async (code: string) => {
@@ -103,18 +135,34 @@ export default function InvitePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-      {/* Animated Background Patterns */}
+      {/* Enhanced Animated Background Patterns */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)] animate-pulse"></div>
-        {/* Enhanced Floating orbs */}
+        {/* Primary gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/15 to-cyan-500/20 animate-pulse"></div>
+        
+        {/* Radial gradient effects */}
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_25%_25%,rgba(59,130,246,0.15),transparent_50%)] animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_75%_75%,rgba(147,51,234,0.12),transparent_50%)] animate-pulse" style={{animationDelay: '1s'}}></div>
+        
+        {/* Enhanced Floating orbs with more variety */}
         <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500/15 rounded-full blur-xl animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
         <div className="absolute top-40 right-20 w-24 h-24 bg-purple-500/15 rounded-full blur-xl animate-bounce" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
         <div className="absolute bottom-32 left-32 w-20 h-20 bg-indigo-500/15 rounded-full blur-xl animate-bounce" style={{animationDelay: '2s', animationDuration: '5s'}}></div>
-        <div className="absolute top-1/3 right-1/3 w-16 h-16 bg-cyan-500/10 rounded-full blur-xl animate-bounce" style={{animationDelay: '3s', animationDuration: '6s'}}></div>
-        <div className="absolute bottom-1/4 right-20 w-28 h-28 bg-violet-500/10 rounded-full blur-xl animate-bounce" style={{animationDelay: '1.5s', animationDuration: '5s'}}></div>
+        <div className="absolute top-1/3 right-1/3 w-16 h-16 bg-cyan-500/12 rounded-full blur-xl animate-bounce" style={{animationDelay: '3s', animationDuration: '6s'}}></div>
+        <div className="absolute bottom-1/4 right-20 w-28 h-28 bg-violet-500/12 rounded-full blur-xl animate-bounce" style={{animationDelay: '1.5s', animationDuration: '5s'}}></div>
+        <div className="absolute top-3/4 left-1/4 w-36 h-36 bg-emerald-500/8 rounded-full blur-2xl animate-bounce" style={{animationDelay: '4s', animationDuration: '7s'}}></div>
+        <div className="absolute top-1/2 left-3/4 w-20 h-20 bg-pink-500/10 rounded-full blur-xl animate-bounce" style={{animationDelay: '2.5s', animationDuration: '4.5s'}}></div>
+        
+        {/* Animated waves */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,transparent_49%,rgba(59,130,246,0.3)_50%,transparent_51%)] bg-[length:100px_100px] animate-pulse"></div>
+        </div>
+        
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 opacity-5 bg-[radial-gradient(circle_at_2px_2px,rgba(255,255,255,0.3)_1px,transparent_0)] bg-[length:40px_40px]"></div>
+        
+        {/* Subtle texture overlay */}
+        <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-white/5 via-transparent to-blue-500/5"></div>
       </div>
 
       {/* Main Content */}
