@@ -117,16 +117,17 @@ export default function InvitePage() {
       <div className="flex-1 flex items-center justify-center p-4 relative z-10">
         <div className="w-full max-w-md animate-fade-in">
           
+          {/* Logo positioned above everything */}
+          <div className="absolute inset-x-0 -top-32 flex items-center justify-center z-0 pointer-events-none">
+            <img 
+              src={mlvsLogo} 
+              alt="MLVS District" 
+              className="w-80 opacity-90"
+            />
+          </div>
+
           {/* Header Section */}
           <div className="text-center mb-10 relative">
-            {/* Logo positioned absolutely to not affect layout */}
-            <div className="absolute inset-x-0 -top-8 flex items-center justify-center z-0 pointer-events-none">
-              <img 
-                src={mlvsLogo} 
-                alt="MLVS District" 
-                className="w-80 opacity-90"
-              />
-            </div>
             <div className="flex items-center justify-center space-x-2 mb-4 animate-slide-up relative z-10" style={{animationDelay: '0.2s'}}>
               <ShieldCheckIcon className="text-blue-400 w-6 h-6 animate-pulse" />
               <span className="text-blue-400 font-medium text-lg">Secure Access Portal</span>
