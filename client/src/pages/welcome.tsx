@@ -11,7 +11,9 @@ import {
   ShieldCheckIcon, 
   FingerprintIcon,
   SparklesIcon,
-  StarIcon 
+  StarIcon,
+  ZapIcon,
+  RocketIcon 
 } from "lucide-react";
 
 interface SessionData {
@@ -47,9 +49,8 @@ export default function WelcomePage() {
   }, [setLocation]);
 
   const handleGetStarted = () => {
-    // This would typically navigate to the main app
-    // For now, we'll just show a placeholder action
-    console.log('Getting started...');
+    // Navigate to dashboard
+    setLocation('/dashboard');
   };
 
   const handleBackToLogin = () => {
@@ -80,11 +81,14 @@ export default function WelcomePage() {
           
           {/* Header Section */}
           <div className="text-center mb-16 relative">
-            {/* Success Icon with Enhanced Effects */}
-            <div className="mx-auto w-28 h-28 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center mb-8 shadow-2xl animate-slide-up relative overflow-hidden" style={{animationDelay: '0.2s'}}>
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full animate-pulse opacity-75"></div>
-              <CheckIcon className="text-white w-14 h-14 relative z-10 drop-shadow-lg" />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-ping"></div>
+            {/* Cool Icon with Enhanced Effects */}
+            <div className="mx-auto w-28 h-28 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-8 shadow-2xl animate-slide-up relative overflow-hidden transform rotate-12" style={{animationDelay: '0.2s'}}>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 rounded-2xl animate-pulse opacity-75"></div>
+              <RocketIcon className="text-white w-14 h-14 relative z-10 drop-shadow-lg transform -rotate-12" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/30 to-transparent animate-ping"></div>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                <ZapIcon className="text-yellow-900 w-3 h-3" />
+              </div>
             </div>
 
             <h1 className="text-6xl font-bold text-white mb-6 animate-slide-up" style={{animationDelay: '0.4s'}}>Welcome!</h1>
