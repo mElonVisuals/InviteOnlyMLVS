@@ -10,6 +10,9 @@ import TermsPage from "@/pages/terms";
 import DashboardPage from "@/pages/dashboard";
 import AnalyticsPage from "@/pages/analytics";
 import UsersPage from "@/pages/users";
+import SystemPage from "@/pages/system";
+import ReportsPage from "@/pages/reports";
+import SettingsPage from "@/pages/settings";
 import { useEffect } from "react";
 
 function Router() {
@@ -22,6 +25,9 @@ function Router() {
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/analytics" component={AnalyticsPage} />
       <Route path="/users" component={UsersPage} />
+      <Route path="/system" component={SystemPage} />
+      <Route path="/reports" component={ReportsPage} />
+      <Route path="/settings" component={SettingsPage} />
       <Route component={InvitePage} />
     </Switch>
   );
