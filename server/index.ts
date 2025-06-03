@@ -2,7 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { pool } from "./db";
-import { initializeDiscordBot } from "./discord-bot-simple";
+import { productionDiscordBot } from "./production-discord-bot";
 
 const app = express();
 app.use(express.json());
@@ -82,8 +82,8 @@ async function initializeDatabase() {
 (async () => {
   await initializeDatabase();
   
-  // Start Discord bot alongside the web server
-  initializeDiscordBot().catch(error => {
+  // Start Discord bot with automatic command registration
+  productionDiscordBot.start().catch(error => {
     log(`Discord bot startup failed: ${error.message}`);
     log(`Discord bot error details: ${error.stack || 'No stack trace available'}`);
   });

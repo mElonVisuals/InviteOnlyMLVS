@@ -61,6 +61,9 @@ export class DiscordBotService {
             case 'code-stats':
               await this.handleCodeStats(interaction, EmbedBuilder, PermissionFlagsBits);
               break;
+            case 'report':
+              await this.handleReport(interaction, EmbedBuilder);
+              break;
           }
         } catch (error) {
           console.error('Command error:', error);
@@ -113,7 +116,26 @@ export class DiscordBotService {
       
       new SlashCommandBuilder()
         .setName('code-stats')
-        .setDescription('View invite code statistics (Admin only)')
+        .setDescription('View invite code statistics (Admin only)'),
+      
+      new SlashCommandBuilder()
+        .setName('report')
+        .setDescription('Submit a report to the admin team')
+        .addStringOption((option: any) =>
+          option.setName('type')
+            .setDescription('Type of report')
+            .setRequired(true)
+            .addChoices(
+              { name: 'Bug Report', value: 'bug' },
+              { name: 'User Report', value: 'user' },
+              { name: 'General Issue', value: 'general' },
+              { name: 'Suggestion', value: 'suggestion' }
+            ))
+        .addStringOption((option: any) =>
+          option.setName('content')
+            .setDescription('Details of your report')
+            .setRequired(true)
+            .setMaxLength(1000))
     ];
 
     try {
@@ -319,6 +341,50 @@ export class DiscordBotService {
       .setTimestamp();
 
     await interaction.reply({ embeds: [embed], ephemeral: true });
+  }
+
+  private async handleReport(interaction: any, EmbedBuilder: any): Promise<void> {
+    const reportType = interaction.options.getString('type');
+    const content = interaction.options.getString('content');
+    const userId = interaction.user.id;
+    const username = interaction.user.username;
+
+    try {
+      // Insert report into database
+      await pool.query(
+        'INSERT INTO reports (discord_user_id, discord_username, content, report_type, created_at) VALUES ($1, $2, $3, $4, NOW())',
+        [userId, username, content, reportType]
+      );
+
+      const typeLabels: { [key: string]: string } = {
+        'bug': 'Bug Report',
+        'user': 'User Report', 
+        'general': 'General Issue',
+        'suggestion': 'Suggestion'
+      };
+
+      const embed = new EmbedBuilder()
+        .setTitle('Report Submitted Successfully')
+        .setDescription(`Your ${typeLabels[reportType]} has been submitted to the admin team.`)
+        .addFields(
+          { name: 'Report Type', value: typeLabels[reportType], inline: true },
+          { name: 'Submitted By', value: username, inline: true }
+        )
+        .setColor(0x00ff00)
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [embed], ephemeral: true });
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      
+      const errorEmbed = new EmbedBuilder()
+        .setTitle('Report Submission Failed')
+        .setDescription('There was an error submitting your report. Please try again later.')
+        .setColor(0xff0000)
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+    }
   }
 }
 
