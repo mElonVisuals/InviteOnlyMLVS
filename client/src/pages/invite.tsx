@@ -107,10 +107,14 @@ export default function InvitePage() {
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)] animate-pulse"></div>
-        {/* Floating orbs */}
-        <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500/10 rounded-full blur-xl animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
-        <div className="absolute top-40 right-20 w-24 h-24 bg-purple-500/10 rounded-full blur-xl animate-bounce" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
-        <div className="absolute bottom-32 left-32 w-20 h-20 bg-indigo-500/10 rounded-full blur-xl animate-bounce" style={{animationDelay: '2s', animationDuration: '5s'}}></div>
+        {/* Enhanced Floating orbs */}
+        <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500/15 rounded-full blur-xl animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-purple-500/15 rounded-full blur-xl animate-bounce" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
+        <div className="absolute bottom-32 left-32 w-20 h-20 bg-indigo-500/15 rounded-full blur-xl animate-bounce" style={{animationDelay: '2s', animationDuration: '5s'}}></div>
+        <div className="absolute top-1/3 right-1/3 w-16 h-16 bg-cyan-500/10 rounded-full blur-xl animate-bounce" style={{animationDelay: '3s', animationDuration: '6s'}}></div>
+        <div className="absolute bottom-1/4 right-20 w-28 h-28 bg-violet-500/10 rounded-full blur-xl animate-bounce" style={{animationDelay: '1.5s', animationDuration: '5s'}}></div>
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(circle_at_2px_2px,rgba(255,255,255,0.3)_1px,transparent_0)] bg-[length:40px_40px]"></div>
       </div>
 
       {/* Main Content */}
@@ -118,39 +122,43 @@ export default function InvitePage() {
         <div className="w-full max-w-md animate-fade-in">
           
           {/* Logo positioned above everything */}
-          <div className="absolute inset-x-0 -top-32 flex items-center justify-center z-0 pointer-events-none">
+          <div className="absolute inset-x-0 -top-24 flex items-center justify-center z-0 pointer-events-none">
             <img 
               src={mlvsLogo} 
               alt="MLVS District" 
-              className="w-80 opacity-90"
+              className="w-80 opacity-90 filter drop-shadow-lg"
             />
           </div>
 
           {/* Header Section */}
-          <div className="text-center mb-10 relative">
-            <div className="flex items-center justify-center space-x-2 mb-4 animate-slide-up relative z-10" style={{animationDelay: '0.2s'}}>
-              <ShieldCheckIcon className="text-blue-400 w-6 h-6 animate-pulse" />
-              <span className="text-blue-400 font-medium text-lg">Secure Access Portal</span>
+          <div className="text-center mb-12 relative">
+            <div className="flex items-center justify-center space-x-3 mb-6 animate-slide-up relative z-10" style={{animationDelay: '0.2s'}}>
+              <div className="p-2 bg-blue-500/20 rounded-lg backdrop-blur-sm border border-blue-400/30">
+                <ShieldCheckIcon className="text-blue-400 w-6 h-6 animate-pulse" />
+              </div>
+              <span className="text-blue-400 font-semibold text-xl tracking-wide">Secure Access Portal</span>
             </div>
-            <p className="text-slate-300 text-xl animate-slide-up relative z-10" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
+            <p className="text-slate-300 text-xl animate-slide-up relative z-10 font-light" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
           </div>
 
           {/* Invite Form */}
-          <Card className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 relative overflow-hidden animate-slide-up group hover:shadow-blue-500/20 transition-all duration-300" style={{animationDelay: '0.6s'}}>
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/5 animate-pulse"></div>
-            {/* Animated border glow */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
-            <CardContent className="p-8 relative z-10">
-              <div className="text-center mb-6">
-                <h2 className="text-white font-semibold text-xl mb-2">Access with Invite Code</h2>
-                <p className="text-white/70 text-sm">Enter your exclusive access code below</p>
+          <Card className="bg-white/5 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 relative overflow-hidden animate-slide-up group hover:shadow-blue-500/25 hover:border-blue-400/30 transition-all duration-500" style={{animationDelay: '0.6s'}}>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/8 to-white/3 animate-pulse"></div>
+            {/* Enhanced border glow */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/30 via-purple-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
+            {/* Subtle inner glow */}
+            <div className="absolute inset-1 rounded-3xl bg-gradient-to-br from-white/5 to-transparent opacity-60"></div>
+            <CardContent className="p-10 relative z-10">
+              <div className="text-center mb-8">
+                <h2 className="text-white font-bold text-2xl mb-3 tracking-tight">Access with Invite Code</h2>
+                <p className="text-white/70 text-base font-light">Enter your exclusive access code below</p>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 
                 {/* Invite Code Input */}
                 <div className="animate-slide-up" style={{animationDelay: '0.8s'}}>
-                  <Label htmlFor="invite-code" className="block text-sm font-medium text-white/90 mb-3">
+                  <Label htmlFor="invite-code" className="block text-base font-medium text-white/90 mb-4 tracking-wide">
                     Invite Code
                   </Label>
                   <div className="relative group">
@@ -159,18 +167,20 @@ export default function InvitePage() {
                       id="invite-code"
                       value={inviteCode}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300 text-lg font-mono tracking-wider uppercase pr-12 text-white placeholder-white/50 backdrop-blur-sm hover:bg-white/15 focus:bg-white/15 group-hover:shadow-lg"
+                      className="w-full px-6 py-5 bg-white/8 border border-white/20 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400/50 transition-all duration-300 text-xl font-mono tracking-wider uppercase pr-14 text-white placeholder-white/40 backdrop-blur-sm hover:bg-white/12 focus:bg-white/12 group-hover:shadow-xl shadow-inner"
                       placeholder="ENTER-CODE-HERE"
                       maxLength={16}
                       required
                       autoComplete="off"
                       spellCheck={false}
                     />
-                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
-                      <TicketIcon className="text-white/60 w-5 h-5 transition-colors duration-300 group-hover:text-blue-400" />
+                    <div className="absolute inset-y-0 right-0 pr-5 flex items-center">
+                      <div className="p-2 bg-blue-500/20 rounded-lg backdrop-blur-sm">
+                        <TicketIcon className="text-blue-400 w-5 h-5 transition-colors duration-300 group-hover:text-blue-300" />
+                      </div>
                     </div>
-                    {/* Input glow effect */}
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"></div>
+                    {/* Enhanced input glow effect */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/15 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"></div>
                   </div>
                 </div>
 
@@ -179,17 +189,17 @@ export default function InvitePage() {
                   <Button
                     type="submit"
                     disabled={validateInviteMutation.isPending}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 text-lg shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 transform hover:scale-[1.02] relative overflow-hidden group"
+                    className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-purple-700 hover:from-blue-700 hover:via-blue-800 hover:to-purple-800 text-white font-bold py-5 px-6 rounded-2xl transition-all duration-500 flex items-center justify-center space-x-3 text-xl shadow-2xl hover:shadow-3xl hover:shadow-blue-500/30 transform hover:scale-[1.02] relative overflow-hidden group border border-blue-500/30"
                   >
-                    {/* Button shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    <span className="relative z-10">
+                    {/* Enhanced button shine effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    <span className="relative z-10 tracking-wide">
                       {validateInviteMutation.isPending ? 'Verifying Access...' : 'Verify Access'}
                     </span>
                     {validateInviteMutation.isPending ? (
-                      <Loader2Icon className="w-5 h-5 animate-spin relative z-10" />
+                      <Loader2Icon className="w-6 h-6 animate-spin relative z-10" />
                     ) : (
-                      <ArrowRightIcon className="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
+                      <ArrowRightIcon className="w-6 h-6 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
                     )}
                   </Button>
                 </div>
