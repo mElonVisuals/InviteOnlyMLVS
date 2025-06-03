@@ -133,7 +133,7 @@ function generateInviteCode(): string {
 }
 
 function serveStatic(app: express.Express) {
-  const distPath = path.resolve(__dirname, "../client/dist");
+  const distPath = path.resolve(__dirname, "../dist/public");
   
   app.use(express.static(distPath));
   
