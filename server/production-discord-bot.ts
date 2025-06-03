@@ -275,13 +275,11 @@ export class ProductionDiscordBot {
         [inviteCode, 'false', userId, username]
       );
 
-      // Insert into discord_requests table for tracking (or update if exists)
-      await pool.query(`
-        INSERT INTO discord_requests (discord_user_id, invite_code, created_at) 
-        VALUES ($1, $2, NOW())
-        ON CONFLICT (discord_user_id) 
-        DO UPDATE SET invite_code = $2, created_at = NOW()
-      `, [userId, inviteCode]);
+      // Insert into discord_requests table for tracking
+      await pool.query(
+        'INSERT INTO discord_requests (discord_user_id, invite_code) VALUES ($1, $2)',
+        [userId, inviteCode]
+      );
 
       const embed = new EmbedBuilder()
         .setTitle('Access Code Generated')
