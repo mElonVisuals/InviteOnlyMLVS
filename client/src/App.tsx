@@ -7,6 +7,7 @@ import InvitePage from "@/pages/invite";
 import WelcomePage from "@/pages/welcome";
 import PrivacyPage from "@/pages/privacy";
 import TermsPage from "@/pages/terms";
+import { useEffect } from "react";
 
 function Router() {
   return (
@@ -21,6 +22,11 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    // Force dark mode
+    document.documentElement.classList.add('dark');
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
