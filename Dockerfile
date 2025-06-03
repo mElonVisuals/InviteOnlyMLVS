@@ -16,8 +16,8 @@ COPY . .
 # Build the frontend only
 RUN npm run build
 
-# Build the production server without vite dependencies
-RUN npx esbuild server/production-fixed.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/server.js
+# Build the complete production server
+RUN npx esbuild server/production-complete.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/server.js
 
 # Run database migrations (only works if DATABASE_URL is provided at build time)
 RUN npm run db:push || echo "Database migration skipped - DATABASE_URL not available at build time"
@@ -31,5 +31,5 @@ EXPOSE 5000
 # Set NODE_ENV to production
 ENV NODE_ENV=production
 
-# Start the application with the built production server
-CMD ["node", "start-production.js"]
+# Start the application with the complete production server
+CMD ["node", "start-production-coolify.js"]
