@@ -176,6 +176,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       if (!tokenResponse.ok) {
+        const errorData = await tokenResponse.text();
+        console.error('Discord token exchange failed:', {
+          status: tokenResponse.status,
+          statusText: tokenResponse.statusText,
+          error: errorData,
+          redirectUri: redirectUri
+        });
         return res.redirect('/?error=token_exchange_failed');
       }
 
