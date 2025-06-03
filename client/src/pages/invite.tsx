@@ -8,7 +8,7 @@ import { KeyIcon, TicketIcon, ArrowRightIcon, CheckCircleIcon, XCircleIcon, Load
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import mlvsLogo from "@assets/mlvs_district (1).png";
+import mlvsLogo from "@assets/mlvs_district (2).png";
 
 interface ValidateInviteResponse {
   success: boolean;
@@ -133,42 +133,11 @@ export default function InvitePage() {
               <ShieldCheckIcon className="text-blue-400 w-6 h-6 animate-pulse" />
               <span className="text-blue-400 font-medium text-lg">Secure Access Portal</span>
             </div>
-            <p className="text-slate-300 text-xl animate-slide-up" style={{animationDelay: '0.4s'}}>Choose an option to continue</p>
-          </div>
-
-          {/* Options Cards */}
-          <div className="space-y-4 mb-8 animate-slide-up" style={{animationDelay: '0.6s'}}>
-            {/* Home Page Option */}
-            <Card className="bg-white/10 backdrop-blur-xl rounded-xl shadow-xl border border-white/20 relative overflow-hidden hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer group">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/5"></div>
-              <CardContent className="p-6 relative z-10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-white font-semibold text-lg">Explore Home Page</h3>
-                      <p className="text-white/70 text-sm">Browse our public content and information</p>
-                    </div>
-                  </div>
-                  <ArrowRightIcon className="w-5 h-5 text-white/60 group-hover:text-blue-400 transition-colors duration-300 group-hover:translate-x-1" />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Divider */}
-            <div className="flex items-center space-x-4">
-              <div className="flex-1 h-px bg-white/20"></div>
-              <span className="text-white/60 text-sm font-medium">OR</span>
-              <div className="flex-1 h-px bg-white/20"></div>
-            </div>
+            <p className="text-slate-300 text-xl animate-slide-up" style={{animationDelay: '0.4s'}}>Enter your invite code to continue</p>
           </div>
 
           {/* Invite Form */}
-          <Card className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 relative overflow-hidden animate-slide-up group hover:shadow-blue-500/20 transition-all duration-300" style={{animationDelay: '0.8s'}}>
+          <Card className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 relative overflow-hidden animate-slide-up group hover:shadow-blue-500/20 transition-all duration-300" style={{animationDelay: '0.6s'}}>
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/5 animate-pulse"></div>
             {/* Animated border glow */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
@@ -181,7 +150,7 @@ export default function InvitePage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 
                 {/* Invite Code Input */}
-                <div className="animate-slide-up" style={{animationDelay: '1s'}}>
+                <div className="animate-slide-up" style={{animationDelay: '0.8s'}}>
                   <Label htmlFor="invite-code" className="block text-sm font-medium text-white/90 mb-3">
                     Invite Code
                   </Label>
@@ -207,7 +176,7 @@ export default function InvitePage() {
                 </div>
 
                 {/* Submit Button */}
-                <div className="animate-slide-up" style={{animationDelay: '1.2s'}}>
+                <div className="animate-slide-up" style={{animationDelay: '1s'}}>
                   <Button
                     type="submit"
                     disabled={validateInviteMutation.isPending}
@@ -250,7 +219,7 @@ export default function InvitePage() {
           </Card>
 
           {/* Info Section */}
-          <div className="text-center mt-8 animate-slide-up" style={{animationDelay: '1.4s'}}>
+          <div className="text-center mt-8 animate-slide-up" style={{animationDelay: '1.2s'}}>
             <p className="text-sm text-white/60">
               Don't have an invite code?{' '}
               <a href="#" className="text-blue-400 hover:text-blue-300 font-medium transition-all duration-300 hover:underline">
