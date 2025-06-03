@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -341,9 +341,9 @@ export default function InvitePage() {
               <span className="text-white/70 font-medium text-sm">MLVS District</span>
             </div>
             <div className="flex items-center space-x-4 text-xs text-white/50">
-              <a href="#" className="hover:text-white/70 transition-colors duration-300">Privacy</a>
+              <Link href="/privacy" className="hover:text-white/70 transition-colors duration-300">Privacy</Link>
               <span className="text-white/30">•</span>
-              <a href="#" className="hover:text-white/70 transition-colors duration-300">Terms</a>
+              <Link href="/terms" className="hover:text-white/70 transition-colors duration-300">Terms</Link>
               <span className="text-white/30">•</span>
               <span>© 2025 All rights reserved</span>
             </div>
