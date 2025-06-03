@@ -232,12 +232,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Validate invite code
   app.post("/api/validate-invite", async (req, res) => {
     try {
-      console.log('Received invite validation request:', req.body);
       const { code } = validateInviteSchema.parse(req.body);
-      console.log('Parsed code:', code);
 
       const inviteCode = await storage.getInviteCodeByCode(code);
-      console.log('Found invite code:', inviteCode);
       
       if (!inviteCode) {
         return res.status(400).json({ 
