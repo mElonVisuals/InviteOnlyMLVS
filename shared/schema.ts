@@ -21,9 +21,9 @@ export const insertInviteCodeSchema = createInsertSchema(inviteCodes).pick({
   code: true,
 });
 
-export const insertSessionSchema = createInsertSchema(sessions).pick({
-  inviteCodeId: true,
-  userAgent: true,
+export const insertSessionSchema = createInsertSchema(sessions).omit({
+  id: true,
+  accessTime: true,
 });
 
 export const validateInviteSchema = z.object({

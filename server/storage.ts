@@ -61,7 +61,8 @@ export class MemStorage implements IStorage {
     const id = this.currentSessionId++;
     const session: Session = {
       id,
-      ...insertSession,
+      inviteCodeId: insertSession.inviteCodeId || 0,
+      userAgent: insertSession.userAgent || null,
       accessTime: new Date(),
     };
     this.sessions.set(id, session);
