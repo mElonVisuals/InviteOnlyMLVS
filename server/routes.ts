@@ -139,6 +139,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Discord login for returning users
+  app.post("/api/discord-login", async (req, res) => {
+    try {
+      const { discordUserId, discordUsername } = req.body;
+
+      if (!discordUserId || !discordUsername) {
+        return res.status(400).json({
+          success: false,
+          message: "Discord user ID and username are required"
+        });
+      }
+
+      // Check if user exists in persistent_users table
+      const existingUser = await storage.getUserByDiscord(discordUserId);
+      
+      if (!existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "No previous access found. Please request a new invite code."
+        });
+      }
+
+      // Create new session for returning user
+      const session = await storage.createSession({
+        inviteCodeId: null, // Special case for Discord login
+        userAgent: req.headers['user-agent'] || null,
+        discordUserId: discordUserId,
+        discordUsername: discordUsername
+      });
+
+      res.json({
+        success: true,
+        message: "Successfully authenticated with Discord",
+        session: {
+          id: session.id,
+          accessTime: session.accessTime,
+          discordUsername: discordUsername
+        }
+      });
+    } catch (error) {
+      console.error("Discord login error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error during Discord authentication"
+      });
+    }
+  });
+
   // Validate invite code
   app.post("/api/validate-invite", async (req, res) => {
     try {
