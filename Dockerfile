@@ -28,5 +28,5 @@ EXPOSE 5000
 # Set NODE_ENV to production
 ENV NODE_ENV=production
 
-# Start the application
-CMD ["npm", "start"]
+# Start the application with custom script
+CMD ["node", "start-production.js"]
