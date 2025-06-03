@@ -74,8 +74,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Get first available channel for invite creation
+      const channelsResponse = await fetch(`https://discord.com/api/v10/guilds/${guildId}/channels`, {
+        headers: {
+          'Authorization': `Bot ${botToken}`,
+        }
+      });
+
+      if (!channelsResponse.ok) {
+        console.error('Failed to get channels:', channelsResponse.status);
+        return res.status(500).json({ 
+          success: false, 
+          message: "Bot cannot access server channels. Check bot permissions." 
+        });
+      }
+
+      const channels = await channelsResponse.json();
+      const textChannel = channels.find((ch: any) => ch.type === 0); // Text channel
+
+      if (!textChannel) {
+        return res.status(500).json({ 
+          success: false, 
+          message: "No accessible text channels found. Bot needs channel access." 
+        });
+      }
+
       // Create Discord invite using bot
-      const discordResponse = await fetch(`https://discord.com/api/v10/guilds/${guildId}/invites`, {
+      const discordResponse = await fetch(`https://discord.com/api/v10/channels/${textChannel.id}/invites`, {
         method: 'POST',
         headers: {
           'Authorization': `Bot ${botToken}`,
