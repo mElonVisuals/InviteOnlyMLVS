@@ -119,11 +119,11 @@ export default function InvitePage() {
           
           {/* Header Section */}
           <div className="text-center mb-10 relative">
-            <div className="mx-auto w-96 h-48 mb-8 flex items-center justify-center relative z-0">
+            <div className="mx-auto mb-8 flex items-center justify-center relative z-0">
               <img 
                 src={mlvsLogo} 
                 alt="MLVS District" 
-                className="w-full h-full object-contain opacity-90"
+                className="w-80 opacity-90"
               />
             </div>
             <div className="flex items-center justify-center space-x-2 mb-4 animate-slide-up relative z-10" style={{animationDelay: '0.2s'}}>
