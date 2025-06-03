@@ -8,6 +8,8 @@ import WelcomePage from "@/pages/welcome";
 import PrivacyPage from "@/pages/privacy";
 import TermsPage from "@/pages/terms";
 import DashboardPage from "@/pages/dashboard";
+import AnalyticsPage from "@/pages/analytics";
+import UsersPage from "@/pages/users";
 import { useEffect } from "react";
 
 function Router() {
@@ -18,6 +20,8 @@ function Router() {
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/terms" component={TermsPage} />
       <Route path="/dashboard" component={DashboardPage} />
+      <Route path="/analytics" component={AnalyticsPage} />
+      <Route path="/users" component={UsersPage} />
       <Route component={InvitePage} />
     </Switch>
   );
