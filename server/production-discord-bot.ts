@@ -86,6 +86,7 @@ export class ProductionDiscordBot {
       this.client.once('ready', async () => {
         console.log(`Discord bot connected as ${this.client.user?.tag}`);
         await this.forceRegisterCommands(token, guildId);
+        this.startPresenceRotation();
         this.isStarted = true;
         console.log('Discord bot fully initialized with commands');
       });
@@ -258,6 +259,34 @@ export class ProductionDiscordBot {
     return member?.permissions?.has(PermissionFlagsBits.Administrator) || false;
   }
 
+  private startPresenceRotation(): void {
+    const activities = [
+      { name: 'MLVS District Access', type: 3 }, // ActivityType.Watching
+      { name: 'dev.melonvisuals.me', type: 3 },
+      { name: 'invite codes generation', type: 0 }, // ActivityType.Playing
+      { name: 'user requests', type: 2 }, // ActivityType.Listening
+      { name: 'the verification process', type: 3 },
+      { name: 'system security', type: 0 }
+    ];
+
+    let currentIndex = 0;
+    
+    const updatePresence = () => {
+      if (this.client && this.client.user) {
+        this.client.user.setActivity(activities[currentIndex].name, { 
+          type: activities[currentIndex].type 
+        });
+        currentIndex = (currentIndex + 1) % activities.length;
+      }
+    };
+
+    // Set initial presence
+    updatePresence();
+    
+    // Rotate every 30 seconds
+    setInterval(updatePresence, 30000);
+  }
+
   private async handleRequestAccess(interaction: any, EmbedBuilder: any): Promise<void> {
     const userId = interaction.user.id;
     const username = interaction.user.username;
@@ -276,14 +305,16 @@ export class ProductionDiscordBot {
     try {
       const inviteCode = await this.generateUniqueCode();
       
+      // Insert into invite_codes table first
+      await pool.query(
+        'INSERT INTO invite_codes (code, is_used, discord_user_id, discord_username) VALUES ($1, $2, $3, $4)',
+        [inviteCode, 'false', userId, username]
+      );
+
+      // Insert into discord_requests table for tracking
       await pool.query(
         'INSERT INTO discord_requests (discord_user_id, invite_code) VALUES ($1, $2)',
         [userId, inviteCode]
-      );
-
-      await pool.query(
-        'UPDATE invite_codes SET discord_user_id = $1, discord_username = $2 WHERE code = $3',
-        [userId, username, inviteCode]
       );
 
       const embed = new EmbedBuilder()
@@ -317,20 +348,32 @@ export class ProductionDiscordBot {
 
     const count = interaction.options.getInteger('count');
     
-    const codes = [];
-    for (let i = 0; i < count; i++) {
-      const code = await this.generateUniqueCode();
-      await this.insertInviteCode(code);
-      codes.push(code);
+    try {
+      const codes = [];
+      for (let i = 0; i < count; i++) {
+        const code = await this.generateUniqueCode();
+        await pool.query('INSERT INTO invite_codes (code, is_used) VALUES ($1, $2)', [code, 'false']);
+        codes.push(code);
+      }
+
+      const embed = new EmbedBuilder()
+        .setTitle(`Generated ${count} Invite Codes`)
+        .setDescription(codes.map((code: string) => `\`${code}\``).join('\n'))
+        .setColor(0x0099ff)
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [embed], ephemeral: true });
+    } catch (error) {
+      console.error('Error generating bulk codes:', error);
+      
+      const errorEmbed = new EmbedBuilder()
+        .setTitle('Error')
+        .setDescription('Failed to generate bulk codes. Please try again later.')
+        .setColor(0xff0000)
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
-
-    const embed = new EmbedBuilder()
-      .setTitle(`Generated ${count} Invite Codes`)
-      .setDescription(codes.map((code: string) => `\`${code}\``).join('\n'))
-      .setColor(0x0099ff)
-      .setTimestamp();
-
-    await interaction.reply({ embeds: [embed], ephemeral: true });
   }
 
   private async handleCodeStats(interaction: any, EmbedBuilder: any, PermissionFlagsBits: any): Promise<void> {
@@ -374,6 +417,34 @@ export class ProductionDiscordBot {
         'INSERT INTO reports (discord_user_id, discord_username, content, report_type, created_at) VALUES ($1, $2, $3, $4, NOW())',
         [userId, username, content, reportType]
       );
+
+      const typeLabels: { [key: string]: string } = {
+        'bug': 'Bug Report',
+        'user': 'User Report',
+        'general': 'General Issue',
+        'suggestion': 'Suggestion'
+      };
+
+      const embed = new EmbedBuilder()
+        .setTitle('Report Submitted')
+        .setDescription(`Your ${typeLabels[reportType]} has been submitted successfully.\n\n**Type:** ${typeLabels[reportType]}\n**From:** ${username}\n**Content:** ${content}`)
+        .setColor(0x00ff00)
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [embed], ephemeral: true });
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      
+      const errorEmbed = new EmbedBuilder()
+        .setTitle('Error')
+        .setDescription('Failed to submit report. Please try again later.')
+        .setColor(0xff0000)
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+    }
+  }
+}
 
       const typeLabels: { [key: string]: string } = {
         'bug': 'Bug Report',
