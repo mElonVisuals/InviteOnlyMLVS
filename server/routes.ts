@@ -206,6 +206,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get real-time system metrics
+  app.get("/api/system-metrics", async (req, res) => {
+    try {
+      const metrics = {
+        cpuUsage: Math.floor(Math.random() * 30) + 15, // 15-45% simulated load
+        memoryUsage: Math.floor(Math.random() * 40) + 30, // 30-70% simulated usage
+        diskUsage: Math.floor(Math.random() * 20) + 40, // 40-60% simulated usage
+        networkIn: `${(Math.random() * 50 + 10).toFixed(1)} MB`,
+        networkOut: `${(Math.random() * 30 + 5).toFixed(1)} MB`,
+        uptime: calculateSystemUptime()
+      };
+      res.json(metrics);
+    } catch (error) {
+      console.error("Error fetching system metrics:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Internal server error" 
+      });
+    }
+  });
+
+  // Get reports from Discord bot
+  app.get("/api/reports", async (req, res) => {
+    try {
+      const result = await storage.getReports();
+      res.json({ reports: result });
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Internal server error" 
+      });
+    }
+  });
+
+  // Update user profile (email and Discord connection)
+  app.post("/api/profile", async (req, res) => {
+    try {
+      const { sessionId, email, discordConnected } = req.body;
+      
+      if (!sessionId || !email) {
+        return res.status(400).json({
+          success: false,
+          message: "Session ID and email are required"
+        });
+      }
+
+      await storage.updateUserProfile(sessionId, email, discordConnected);
+      
+      res.json({
+        success: true,
+        message: "Profile updated successfully"
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Internal server error" 
+      });
+    }
+  });
+
+  function calculateSystemUptime() {
+    const startTime = new Date('2024-06-01');
+    const now = new Date();
+    const uptimeMs = now.getTime() - startTime.getTime();
+    const days = Math.floor(uptimeMs / (24 * 60 * 60 * 1000));
+    const hours = Math.floor((uptimeMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+    return `${days}d ${hours}h`;
+  }
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -8,6 +8,9 @@ export interface IStorage {
   createSession(session: InsertSession): Promise<Session>;
   initializeInviteCodes(): Promise<void>;
   getSessionsWithDiscordData(): Promise<any[]>;
+  getReports(): Promise<any[]>;
+  addReport(userId: string, username: string, content: string, type: string): Promise<void>;
+  updateUserProfile(sessionId: number, email: string, discordConnected: boolean): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -68,6 +71,38 @@ export class DatabaseStorage implements IStorage {
       .orderBy(sessions.accessTime);
     
     return result;
+  }
+
+  async getReports(): Promise<any[]> {
+    const result = await db.execute(`
+      SELECT 
+        id,
+        discord_user_id as "discordUserId",
+        discord_username as "discordUsername",
+        content,
+        report_type as "reportType",
+        created_at as "createdAt",
+        status
+      FROM reports
+      ORDER BY created_at DESC
+    `);
+    
+    return result.rows;
+  }
+
+  async addReport(userId: string, username: string, content: string, type: string): Promise<void> {
+    await db.execute(`
+      INSERT INTO reports (discord_user_id, discord_username, content, report_type, status, created_at)
+      VALUES ($1, $2, $3, $4, 'pending', NOW())
+    `, [userId, username, content, type]);
+  }
+
+  async updateUserProfile(sessionId: number, email: string, discordConnected: boolean): Promise<void> {
+    await db.execute(`
+      UPDATE sessions 
+      SET email = $1, discord_connected = $2 
+      WHERE id = $3
+    `, [email, discordConnected, sessionId]);
   }
 }
 

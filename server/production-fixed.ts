@@ -48,6 +48,24 @@ async function startDiscordBot() {
           new SlashCommandBuilder()
             .setName('request-access')
             .setDescription('Request an access code for MLVS District'),
+          new SlashCommandBuilder()
+            .setName('report')
+            .setDescription('Report an issue or concern')
+            .addStringOption(option =>
+              option.setName('type')
+                .setDescription('Type of report')
+                .setRequired(true)
+                .addChoices(
+                  { name: 'Bug Report', value: 'bug' },
+                  { name: 'User Report', value: 'user' },
+                  { name: 'General Issue', value: 'general' },
+                  { name: 'Suggestion', value: 'suggestion' }
+                ))
+            .addStringOption(option =>
+              option.setName('content')
+                .setDescription('Details of your report')
+                .setRequired(true)
+                .setMaxLength(1000))
         ].map(command => command.toJSON());
 
         if (guildId) {
@@ -108,6 +126,30 @@ async function startDiscordBot() {
           log(`Discord bot: Error handling request: ${error}`);
           await interaction.reply({
             content: 'An error occurred while generating your invite code.',
+            ephemeral: true
+          });
+        }
+      } else if (interaction.commandName === 'report') {
+        try {
+          const reportType = interaction.options.getString('type');
+          const content = interaction.options.getString('content');
+
+          // Save report to database
+          await pool.query(`
+            INSERT INTO reports (discord_user_id, discord_username, content, report_type, status, created_at)
+            VALUES ($1, $2, $3, $4, 'pending', NOW())
+          `, [interaction.user.id, interaction.user.username, content, reportType]);
+
+          await interaction.reply({
+            content: `Your ${reportType} report has been submitted successfully. Thank you for your feedback!\n\nReport ID: #${Date.now().toString().slice(-6)}`,
+            ephemeral: true
+          });
+
+          log(`Discord bot: Report submitted by ${interaction.user.tag}: ${reportType}`);
+        } catch (error) {
+          log(`Discord bot: Error handling report: ${error}`);
+          await interaction.reply({
+            content: 'An error occurred while submitting your report. Please try again.',
             ephemeral: true
           });
         }
