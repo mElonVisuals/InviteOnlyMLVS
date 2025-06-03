@@ -1,0 +1,76 @@
+Coolify
+v4.0.0-beta.418
+
+Current Team
+
+Root Team
+Dashboard
+Projects
+Servers
+Sources
+Destinations
+S3 Storages
+Shared Variables
+Notifications
+Keys & Tokens
+Tags
+Terminal
+Profile
+Teams
+Settings
+Onboarding
+Sponsor us
+Feedback
+Logout
+Logs
+MLVS District
+production
+m-elon-visuals/-invite-only-m-l-v-s:main-jo08c8oc4c4ookw04oc8kgw0
+Running
+
+Configuration
+Deployments
+Logs
+Terminal
+
+Links
+
+Advanced
+Redeploy
+Restart
+Stop
+Here you can see the logs of the application.
+Server: localhost
+dcwkgko8swgcgcsowwswggok-221326968388
+Only Show Number of Lines
+*
+9000
+Refresh
+Stream Logs
+Include Timestamps
+
+2025-06-03T22:13:50.413374761Z npm warn exec The following package was not found and will be installed: tsx@4.19.4
+2025-06-03T22:13:52.804889656Z 6/3/2025, 10:13:52 PM [express] Initializing production database...
+2025-06-03T22:13:52.889471453Z 6/3/2025, 10:13:52 PM [express] Database initialization complete
+2025-06-03T22:13:52.892025494Z 6/3/2025, 10:13:52 PM [error] Failed to start production server: ReferenceError: require is not defined
+2025-06-03T22:13:55.564451511Z 6/3/2025, 10:13:55 PM [express] Initializing production database...
+2025-06-03T22:13:55.621388468Z 6/3/2025, 10:13:55 PM [express] Database initialization complete
+2025-06-03T22:13:55.624021656Z 6/3/2025, 10:13:55 PM [error] Failed to start production server: ReferenceError: require is not defined
+2025-06-03T22:13:58.286177891Z 6/3/2025, 10:13:58 PM [express] Initializing production database...
+2025-06-03T22:13:58.325987703Z 6/3/2025, 10:13:58 PM [express] Database initialization complete
+2025-06-03T22:13:58.328199942Z 6/3/2025, 10:13:58 PM [error] Failed to start production server: ReferenceError: require is not defined
+2025-06-03T22:14:01.248079372Z 6/3/2025, 10:14:01 PM [express] Initializing production database...
+2025-06-03T22:14:01.324326308Z 6/3/2025, 10:14:01 PM [express] Database initialization complete
+2025-06-03T22:14:01.330148824Z 6/3/2025, 10:14:01 PM [error] Failed to start production server: ReferenceError: require is not defined
+2025-06-03T22:14:05.150682068Z 6/3/2025, 10:14:05 PM [express] Initializing production database...
+2025-06-03T22:14:05.218811166Z 6/3/2025, 10:14:05 PM [express] Database initialization complete
+2025-06-03T22:14:05.221798990Z 6/3/2025, 10:14:05 PM [error] Failed to start production server: ReferenceError: require is not defined
+2025-06-03T22:14:09.205281396Z 6/3/2025, 10:14:09 PM [express] Initializing production database...
+2025-06-03T22:14:09.253396051Z 6/3/2025, 10:14:09 PM [express] Database initialization complete
+2025-06-03T22:14:09.255288116Z 6/3/2025, 10:14:09 PM [error] Failed to start production server: ReferenceError: require is not defined
+2025-06-03T22:14:14.832081471Z 6/3/2025, 10:14:14 PM [express] Initializing production database...
+2025-06-03T22:14:14.870634194Z 6/3/2025, 10:14:14 PM [express] Database initialization complete
+2025-06-03T22:14:14.872150783Z 6/3/2025, 10:14:14 PM [error] Failed to start production server: ReferenceError: require is not defined
+2025-06-03T22:14:23.794312795Z 6/3/2025, 10:14:23 PM [express] Initializing production database...
+2025-06-03T22:14:23.838908621Z 6/3/2025, 10:14:23 PM [express] Database initialization complete
+2025-06-03T22:14:23.841164349Z 6/3/2025, 10:14:23 PM [error] Failed to start production server: ReferenceError: require is not defined

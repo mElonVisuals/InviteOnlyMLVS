@@ -5,6 +5,8 @@ import { storage } from "./storage";
 import { validateInviteSchema } from "@shared/schema";
 import { z } from "zod";
 import { productionDiscordBot } from "./production-discord-bot";
+import sirv from "sirv";
+import path from "path";
 
 const app = express();
 app.use(express.json());
@@ -17,10 +19,7 @@ function log(message: string, source = "express") {
 
 // Serve static files in production
 function serveStatic(app: express.Express) {
-  const path = require("path");
-  const sirv = require("sirv");
-  
-  const distPath = path.resolve(__dirname, "../client/dist");
+  const distPath = path.resolve(process.cwd(), "client/dist");
   app.use(sirv(distPath, { 
     single: true,
     dev: false,
