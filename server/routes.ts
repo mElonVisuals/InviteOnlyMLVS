@@ -18,9 +18,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const guildId = process.env.DISCORD_GUILD_ID;
       
       if (!botToken || !guildId) {
+        console.log('Discord config check:', { 
+          hasBotToken: !!botToken, 
+          hasGuildId: !!guildId,
+          nodeEnv: process.env.NODE_ENV 
+        });
         return res.status(500).json({ 
           success: false, 
-          message: "Discord bot configuration missing. Please contact administrator." 
+          message: "Discord bot configuration missing. Add DISCORD_BOT_TOKEN and DISCORD_GUILD_ID environment variables." 
         });
       }
 
@@ -41,10 +46,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (!discordResponse.ok) {
         const error = await discordResponse.text();
-        console.error('Discord API error:', error);
+        console.error('Discord API error:', discordResponse.status, error);
         return res.status(500).json({ 
           success: false, 
-          message: "Failed to generate Discord invite. Please try again later." 
+          message: `Failed to generate Discord invite. Status: ${discordResponse.status}. Please check bot permissions.` 
         });
       }
 
