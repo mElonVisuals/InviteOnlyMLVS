@@ -288,6 +288,46 @@ export default function InvitePage() {
         </div>
       </div>
 
+      {/* Music Controls */}
+      <div className="fixed top-4 right-4 z-50 flex space-x-2">
+        <Button
+          onClick={toggleMusic}
+          className="p-3 bg-black/40 hover:bg-black/60 backdrop-blur-sm border border-white/20 rounded-full transition-all duration-300"
+          variant="ghost"
+          size="sm"
+        >
+          {isPlaying ? (
+            <PauseIcon className="w-4 h-4 text-white" />
+          ) : (
+            <PlayIcon className="w-4 h-4 text-white" />
+          )}
+        </Button>
+        <Button
+          onClick={toggleMute}
+          className="p-3 bg-black/40 hover:bg-black/60 backdrop-blur-sm border border-white/20 rounded-full transition-all duration-300"
+          variant="ghost"
+          size="sm"
+        >
+          {isMuted ? (
+            <VolumeXIcon className="w-4 h-4 text-white" />
+          ) : (
+            <Volume2Icon className="w-4 h-4 text-white" />
+          )}
+        </Button>
+      </div>
+
+      {/* Background Audio - Using Web Audio API for ambient sound */}
+      <audio 
+        ref={audioRef}
+        preload="auto"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onVolumeChange={(e) => setIsMuted((e.target as HTMLAudioElement).muted)}
+      >
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+PosmEcBTqY3/DIbSIFLYXR8tOFMQQPaa7t555NEAxPpuPwtmUdAjiPzfPNeSsFJHfH8N2QQAoUXrTp66hVFApGn+PosmEcBTqY3/DIbSIFLYXR8tOFMQQPaq/u55dTFApKnOXrsmEcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+PosmEcBTqY3/DIbSIFLYXR8tOFMQQPaa7t555NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+PosmEcBTqY3/DIbSIFLYXR8tOFMQQPaq/u55dTFApKnOXrsmEcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+PosmEcBTqY3/DIbSIFLYXR8tOFMQQPaq/u55dTFApKnOXrsmEcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+PosmEcBTqY3/DIbSIFLYXR8tOFMQQPaq/u55dTFApKnOXrsmEcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+PosmEcBTqY3/DIbSIFLYXR8tOFMQQPaq/u55dTFApKnOXrs=" type="audio/wav" />
+        Your browser does not support the audio element.
+      </audio>
+
       {/* Compact Footer */}
       <footer className="relative z-10 border-t border-white/10 bg-black/20 backdrop-blur-sm animate-fade-in" style={{animationDelay: '1.4s'}}>
         <div className="max-w-6xl mx-auto px-4 py-3">
