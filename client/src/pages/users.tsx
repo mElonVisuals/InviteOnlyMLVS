@@ -16,18 +16,21 @@ import {
 } from "lucide-react";
 
 interface SessionData {
+  sessionId: number;
   accessTime: string;
   inviteCode: string;
+  discordUsername: string | null;
+  discordUserId: string | null;
+  userAgent: string | null;
+  usedAt: string | null;
 }
 
 interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
+  sessionId: number;
+  discordUsername: string | null;
+  inviteCode: string;
+  accessTime: string;
   status: string;
-  joinDate: string;
-  lastActive: string;
 }
 
 export default function UsersPage() {

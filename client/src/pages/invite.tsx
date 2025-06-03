@@ -16,6 +16,7 @@ interface ValidateInviteResponse {
   session?: {
     id: number;
     accessTime: string;
+    discordUsername: string | null;
   };
 }
 
@@ -75,8 +76,13 @@ export default function InvitePage() {
         // Store session data and navigate to welcome after delay
         if (data.session) {
           localStorage.setItem('sessionData', JSON.stringify({
+            sessionId: data.session.id,
             accessTime: data.session.accessTime,
-            inviteCode: inviteCode.toUpperCase()
+            inviteCode: inviteCode.toUpperCase(),
+            discordUsername: data.session.discordUsername,
+            discordUserId: null,
+            userAgent: null,
+            usedAt: null
           }));
         }
         

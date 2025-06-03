@@ -25,8 +25,13 @@ import {
 } from "lucide-react";
 
 interface SessionData {
+  sessionId: number;
   accessTime: string;
   inviteCode: string;
+  discordUsername: string | null;
+  discordUserId: string | null;
+  userAgent: string | null;
+  usedAt: string | null;
 }
 
 interface DashboardStats {
@@ -39,13 +44,14 @@ interface DashboardStats {
 export default function DashboardPage() {
   const [, setLocation] = useLocation();
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
+  const [allSessions, setAllSessions] = useState<SessionData[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const [stats, setStats] = useState<DashboardStats>({
-    totalUsers: 1247,
-    activeConnections: 89,
+    totalUsers: 0,
+    activeConnections: 0,
     systemUptime: "99.9%",
     dataTransfer: "2.4TB"
   });
@@ -57,6 +63,9 @@ export default function DashboardPage() {
       try {
         const session = JSON.parse(storedSession) as SessionData;
         setSessionData(session);
+        
+        // Fetch all sessions with Discord usernames
+        fetchSessionData();
       } catch (error) {
         console.error('Error parsing session data:', error);
         setLocation('/');
@@ -65,6 +74,27 @@ export default function DashboardPage() {
       setLocation('/');
     }
   }, [setLocation]);
+
+  const fetchSessionData = async () => {
+    try {
+      const response = await fetch('/api/sessions');
+      if (response.ok) {
+        const data = await response.json();
+        setAllSessions(data.sessions);
+        
+        // Update stats based on real data
+        setStats(prev => ({
+          ...prev,
+          totalUsers: data.sessions.length,
+          activeConnections: data.sessions.filter((s: SessionData) => 
+            new Date().getTime() - new Date(s.accessTime).getTime() < 24 * 60 * 60 * 1000
+          ).length
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching session data:', error);
+    }
+  };
 
   // Close notifications when clicking outside
   useEffect(() => {
@@ -197,8 +227,10 @@ export default function DashboardPage() {
                   <UserIcon className="text-white w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-white font-medium text-sm">Guest User</p>
-                  <p className="text-white/50 text-xs">ID: {sessionData.inviteCode}</p>
+                  <p className="text-white font-medium text-sm">
+                    {sessionData.discordUsername || 'Guest User'}
+                  </p>
+                  <p className="text-white/50 text-xs">Code: {sessionData.inviteCode}</p>
                 </div>
               </div>
               <Button
